@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Årsregnskab – Andelsforeningen Friland</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="page-header">
+    <h1>Andelsforeningen Friland</h1>
+    <p class="subtitle">Årsregnskab <span id="valgt-aar">2022</span></p>
+    <p class="regnskabsperiode">Regnskabsperiode: 1. januar – 31. december <span id="valgt-aar-footer">2022</span></p>
+    <div class="economic-controls">
+      <label for="aar-valg">Regnskabsår:</label>
+      <select id="aar-valg">
+        <option value="2024">2024</option>
+        <option value="2023">2023</option>
+        <option value="2022" selected>2022</option>
+        <option value="2021">2021</option>
+      </select>
+      <button type="button" id="hent-economic" class="btn-economic">Hent fra e-conomic</button>
+      <span id="economic-status" class="economic-status"></span>
+    </div>
+  </header>
+
+  <main class="content">
+    <section class="regnskabssektion">
+      <h2>Resultatopgørelse</h2>
+      <table class="regnskabstabel">
+        <tbody>
+          <tr class="gruppe-header">
+            <td colspan="2">Indtægter</td>
+          </tr>
+          <tr>
+            <td>Andelskontingent</td>
+            <td class="beloeb">3.847.200</td>
+          </tr>
+          <tr>
+            <td>Indtægter fra parkering og vaskeri</td>
+            <td class="beloeb">124.500</td>
+          </tr>
+          <tr>
+            <td>Renteindtægter</td>
+            <td class="beloeb">18.300</td>
+          </tr>
+          <tr class="subtotal">
+            <td><strong>Samlede indtægter</strong></td>
+            <td class="beloeb"><strong>3.990.000</strong></td>
+          </tr>
+
+          <tr class="gruppe-header">
+            <td colspan="2">Udgifter</td>
+          </tr>
+          <tr>
+            <td>Administration og drift</td>
+            <td class="beloeb">- 412.000</td>
+          </tr>
+          <tr>
+            <td>Vedligeholdelse</td>
+            <td class="beloeb">- 568.200</td>
+          </tr>
+          <tr>
+            <td>Renteudgifter</td>
+            <td class="beloeb">- 1.245.000</td>
+          </tr>
+          <tr>
+            <td>Forsikring</td>
+            <td class="beloeb">- 186.400</td>
+          </tr>
+          <tr>
+            <td>Ejendomsskatter og grundskyld</td>
+            <td class="beloeb">- 324.800</td>
+          </tr>
+          <tr>
+            <td>Varme, vand og afløb</td>
+            <td class="beloeb">- 445.600</td>
+          </tr>
+          <tr>
+            <td>Revision og øvrige driftsomkostninger</td>
+            <td class="beloeb">- 198.500</td>
+          </tr>
+          <tr class="subtotal">
+            <td><strong>Samlede udgifter</strong></td>
+            <td class="beloeb"><strong>- 3.380.500</strong></td>
+          </tr>
+
+          <tr class="resultat">
+            <td><strong>Årets resultat (overskud)</strong></td>
+            <td class="beloeb positive"><strong>609.500</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="regnskabssektion">
+      <h2>Formueopgørelse (Balance)</h2>
+      <div class="balance-grid">
+        <div class="balance-column">
+          <h3>Aktiver</h3>
+          <table class="regnskabstabel balance-tabel">
+            <tbody>
+              <tr class="gruppe-header">
+                <td colspan="2">Omsætningsaktiver</td>
+              </tr>
+              <tr>
+                <td>Kasse og bank</td>
+                <td class="beloeb">2.184.700</td>
+              </tr>
+              <tr>
+                <td>Fordringer</td>
+                <td class="beloeb">45.200</td>
+              </tr>
+              <tr class="subtotal">
+                <td><strong>I alt omsætningsaktiver</strong></td>
+                <td class="beloeb"><strong>2.229.900</strong></td>
+              </tr>
+
+              <tr class="gruppe-header">
+                <td colspan="2">Anlægsaktiver</td>
+              </tr>
+              <tr>
+                <td>Ejendom</td>
+                <td class="beloeb">127.450.000</td>
+              </tr>
+              <tr class="subtotal">
+                <td><strong>I alt anlægsaktiver</strong></td>
+                <td class="beloeb"><strong>127.450.000</strong></td>
+              </tr>
+
+              <tr class="total-row">
+                <td><strong>Sum aktiver</strong></td>
+                <td class="beloeb"><strong>129.679.900</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="balance-column">
+          <h3>Passiver og egenkapital</h3>
+          <table class="regnskabstabel balance-tabel">
+            <tbody>
+              <tr class="gruppe-header">
+                <td colspan="2">Egenkapital</td>
+              </tr>
+              <tr>
+                <td>Andelskapital</td>
+                <td class="beloeb">24.500.000</td>
+              </tr>
+              <tr>
+                <td>Overførselsreserve</td>
+                <td class="beloeb">32.890.400</td>
+              </tr>
+              <tr class="subtotal">
+                <td><strong>I alt egenkapital</strong></td>
+                <td class="beloeb"><strong>57.390.400</strong></td>
+              </tr>
+
+              <tr class="gruppe-header">
+                <td colspan="2">Langfristet gæld</td>
+              </tr>
+              <tr>
+                <td>Realkreditlån</td>
+                <td class="beloeb">68.500.000</td>
+              </tr>
+              <tr class="subtotal">
+                <td><strong>I alt langfristet gæld</strong></td>
+                <td class="beloeb"><strong>68.500.000</strong></td>
+              </tr>
+
+              <tr class="gruppe-header">
+                <td colspan="2">Kortfristet gæld</td>
+              </tr>
+              <tr>
+                <td>Skyldige omkostninger</td>
+                <td class="beloeb">2.789.500</td>
+              </tr>
+              <tr>
+                <td>Forudbetalt boligafgift</td>
+                <td class="beloeb">1.000.000</td>
+              </tr>
+              <tr class="subtotal">
+                <td><strong>I alt kortfristet gæld</strong></td>
+                <td class="beloeb"><strong>3.789.500</strong></td>
+              </tr>
+
+              <tr class="total-row">
+                <td><strong>Sum passiver og egenkapital</strong></td>
+                <td class="beloeb"><strong>129.679.900</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="regnskabssektion nogleoplysninger">
+      <h2>Nøgleoplysninger</h2>
+      <div class="nogleoplysninger-grid">
+        <div class="info-kort">
+          <span class="info-label">Antal andele</span>
+          <span class="info-vaerdi">48</span>
+        </div>
+        <div class="info-kort">
+          <span class="info-label">Antal boliger</span>
+          <span class="info-vaerdi">48</span>
+        </div>
+        <div class="info-kort">
+          <span class="info-label">Gennemsnitlig boligafgift pr. andel</span>
+          <span class="info-vaerdi">6.408 kr/md</span>
+        </div>
+        <div class="info-kort">
+          <span class="info-label">Gældsgrad</span>
+          <span class="info-vaerdi">55,7 %</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="economic-sektion" class="regnskabssektion economic-data" style="display: none;">
+      <h2>Data fra e-conomic (kontoplan med totaler)</h2>
+      <p class="economic-info">Nedenfor vises kontosaldi fra e-conomic for det valgte regnskabsår.</p>
+      <div id="economic-totals"></div>
+    </section>
+
+    <footer class="page-footer">
+      <p id="footer-datasource">Dette årsregnskab er udarbejdet med dummydata til demonstrationsformål.</p>
+      <p>Andelsforeningen Friland · CVR-nr. 12345678</p>
+    </footer>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
