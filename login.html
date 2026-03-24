@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log ind – Friland</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    .login-wrap { max-width: 22rem; margin: 3rem auto; padding: 1.5rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; }
+    .login-wrap h1 { margin: 0 0 0.5rem 0; font-size: 1.35rem; }
+    .login-wrap p { margin: 0 0 1.25rem 0; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5; }
+    .login-form { display: flex; flex-direction: column; gap: 0.85rem; }
+    .login-form label { display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); }
+    .login-form input { padding: 0.5rem 0.65rem; border-radius: 6px; border: 1px solid var(--border); font: inherit; }
+    .login-form button { margin-top: 0.25rem; padding: 0.6rem 1.2rem; background: var(--accent); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-family: inherit; }
+    .login-form button:hover { background: var(--accent-light); }
+    .login-err { display: none; padding: 0.75rem; background: #fde8e8; color: #8b1a1a; border-radius: 6px; font-size: 0.875rem; }
+  </style>
+</head>
+<body>
+  <main class="content">
+    <div class="login-wrap">
+      <h1>Log ind</h1>
+      <p>Årsregnskab og øvrige sider kræver login.</p>
+      <div id="loginErr" class="login-err"></div>
+      <form class="login-form" id="loginForm" action="#" method="post">
+        <label>Email
+          <input type="email" id="email" name="email" autocomplete="username" required />
+        </label>
+        <label>Kode
+          <input type="password" id="password" name="password" autocomplete="current-password" required />
+        </label>
+        <button type="submit">Log ind</button>
+      </form>
+    </div>
+  </main>
+  <script>
+    (function () {
+      const apiBase =
+        window.location.origin && window.location.origin !== 'null'
+          ? window.location.origin
+          : 'http://localhost:3000';
+
+      function safeNext(raw) {
+        if (!raw || typeof raw !== 'string') return '/';
+        if (!raw.startsWith('/') || raw.startsWith('//')) return '/';
+        return raw;
+      }
+
+      const params = new URLSearchParams(window.location.search);
+      const next = safeNext(params.get('next'));
+
+      document.getElementById('loginForm').addEventListener('submit', async function (ev) {
+        ev.preventDefault();
+        const errEl = document.getElementById('loginErr');
+        errEl.style.display = 'none';
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        try {
+          const res = await fetch(apiBase + '/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ email, password }),
+          });
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) throw new Error(data.error || 'Login fejlede');
+          if (data.token) {
+            try {
+              sessionStorage.setItem('frilandAuthToken', data.token);
+            } catch (_) {}
+          }
+          window.location.replace(next);
+        } catch (e) {
+          errEl.textContent = e.message || String(e);
+          errEl.style.display = 'block';
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

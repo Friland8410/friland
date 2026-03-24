@@ -1,0 +1,14 @@
+{
+  "users": [
+    {
+      "email": "nikolaj@idevaerket.dk",
+      "passwordHash": "$2a$10$QtpbOjri4X8NzyFFGtSaFObMHD3R1/LDRwKQBbjUFfcnP9C0OlFi2",
+      "role": "admin"
+    },
+    {
+      "email": "nikolaj@begejstring.dk",
+      "passwordHash": "$2a$10$X/jjsO1qWIdtAChqIaPioOuOTnwNNc4XAIL9ycB991QroopvzveUy",
+      "role": "user"
+    }
+  ]
+}

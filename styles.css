@@ -17,6 +17,94 @@
   box-sizing: border-box;
 }
 
+/* Topmenu – fælles for alle sider */
+.topmenu {
+  background: var(--accent);
+  color: white;
+  padding: 0 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0;
+  box-shadow: 0 2px 8px var(--shadow);
+}
+.topmenu a {
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  padding: 1rem 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: background 0.15s, color 0.15s;
+}
+.topmenu a:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+}
+.topmenu a.active {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+/* Undermenu «Fra Economic» */
+.topmenu-dropdown {
+  position: relative;
+}
+.topmenu-dropdown-toggle {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.9);
+  padding: 1rem 1.25rem;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, color 0.15s;
+}
+.topmenu-dropdown-toggle:hover,
+.topmenu-dropdown:focus-within > .topmenu-dropdown-toggle {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+}
+.topmenu-dropdown.active > .topmenu-dropdown-toggle {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+.topmenu-dropdown-panel {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 100%;
+  min-width: 14rem;
+  flex-direction: column;
+  background: var(--accent);
+  box-shadow: 0 6px 16px var(--shadow);
+  border-radius: 0 0 6px 6px;
+  overflow: hidden;
+  z-index: 200;
+}
+.topmenu-dropdown:hover .topmenu-dropdown-panel,
+.topmenu-dropdown:focus-within .topmenu-dropdown-panel {
+  display: flex;
+}
+.topmenu-dropdown-panel a {
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  padding: 0.75rem 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.topmenu-dropdown-panel a:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+}
+.topmenu-dropdown-panel a.active {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -99,6 +187,21 @@ body {
   background: white;
 }
 
+.btn-debug {
+  background: rgba(255, 255, 255, 0.6);
+  font-size: 0.85rem;
+}
+
+#debug-output {
+  font-size: 0.8rem;
+  overflow-x: auto;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-radius: 6px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
 .economic-status {
   font-size: 0.85rem;
   opacity: 0.9;
@@ -135,6 +238,35 @@ body {
 
 .economic-fejl {
   color: #c44;
+}
+
+.regnskab-2025-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.regnskab-2025-grid h3 {
+  font-size: 1rem;
+  color: var(--accent);
+  margin: 0 0 0.75rem 0;
+}
+
+.sammenligning-tabel th,
+.sammenligning-tabel td {
+  padding: 0.4rem 0.75rem;
+}
+
+.sammenligning-tabel th {
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.economic-detail summary {
+  cursor: pointer;
+  font-weight: 500;
+  color: var(--accent);
 }
 
 .economic-fejl code {

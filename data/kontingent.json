@@ -1,0 +1,1418 @@
+{
+  "version": 1,
+  "lods": [
+    {
+      "id": "lod-1",
+      "label": "Lod 1",
+      "personer": [
+        {
+          "id": "p-1",
+          "navn": "Karen Ejlersen",
+          "email": "karenejlersen1@gmail.com",
+          "telefon": "22638382",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-2",
+      "label": "Lod 2",
+      "personer": [
+        {
+          "id": "p-2",
+          "navn": "Erik Toft Christensen",
+          "email": "erikfriland@gmail.com",
+          "telefon": "40797773",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-3",
+      "label": "Lod 3",
+      "personer": [
+        {
+          "id": "p-3",
+          "navn": "Tonny Trifolikom",
+          "email": "tonny@friland.org",
+          "telefon": "28407330",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        },
+        {
+          "id": "p-4",
+          "navn": "Sofi",
+          "email": "oestergaard.anne@gmail.com",
+          "telefon": "42703388",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-4",
+      "label": "Lod 4",
+      "personer": [
+        {
+          "id": "p-5",
+          "navn": "Jakob Rasmussen",
+          "email": "elbrev1@hotmail.com",
+          "telefon": "20776098",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        },
+        {
+          "id": "p-6",
+          "navn": "Majken Leth Gudnitz",
+          "email": "gudnitz30@hotmail.com",
+          "telefon": "25466039",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-5",
+      "label": "Lod 5",
+      "personer": [
+        {
+          "id": "p-7",
+          "navn": "Dorthe Frisk",
+          "email": "dorthefrisk@gmail.com",
+          "telefon": "50915366",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        },
+        {
+          "id": "p-8",
+          "navn": "Palle",
+          "email": "pallefrisk@gmail.com",
+          "telefon": "24490710",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-6",
+      "label": "Lod 6",
+      "personer": [
+        {
+          "id": "p-9",
+          "navn": "Steen Møller",
+          "email": "steenfriland@gmail.com",
+          "telefon": "21737321",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        },
+        {
+          "id": "p-10",
+          "navn": "Mette Wind Ramsgaard",
+          "email": "mettewindramsgaard@gmail.com",
+          "telefon": "22172618",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-7",
+      "label": "Lod 7",
+      "personer": [
+        {
+          "id": "p-11",
+          "navn": "Jens Peter Mølgaard",
+          "email": "jens.peter.moelgaard@gmail.com",
+          "telefon": "50171676",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-8",
+      "label": "Lod 8",
+      "personer": [
+        {
+          "id": "p-12",
+          "navn": "Eva Bech Pedersen",
+          "email": "evafriland8@gmail.com",
+          "telefon": "21442598",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        },
+        {
+          "id": "p-13",
+          "navn": "Jens Christian Nielsen",
+          "email": "friland8@gmail.com",
+          "telefon": "60149758",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-9",
+      "label": "Lod 9",
+      "personer": [
+        {
+          "id": "p-14",
+          "navn": "Inge Blok Jørgensen",
+          "email": "inge@friland9.dk",
+          "telefon": "22790355",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        },
+        {
+          "id": "p-15",
+          "navn": "Niels",
+          "email": "niels@friland9.dk",
+          "telefon": "20901112",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-10",
+      "label": "Lod 10",
+      "personer": [
+        {
+          "id": "p-16",
+          "navn": "Henrik Friis",
+          "email": "info@viden.dk",
+          "telefon": "28561531",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        },
+        {
+          "id": "p-17",
+          "navn": "Sebastian",
+          "email": "",
+          "telefon": "",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-11",
+      "label": "Lod 11",
+      "personer": [
+        {
+          "id": "p-18",
+          "navn": "Tove Bang",
+          "email": "friland11@hotmail.com",
+          "telefon": "22649262",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        },
+        {
+          "id": "p-19",
+          "navn": "Louise Obel Bank (lejer)",
+          "email": "louiseobelbank@gmail.com",
+          "telefon": "",
+          "notat": "lejer",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        },
+        {
+          "id": "p-20",
+          "navn": "Ricardo Ribiero (lejer)",
+          "email": "",
+          "telefon": "",
+          "notat": "lejer",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        },
+        {
+          "id": "p-21",
+          "navn": "Alan Bjerre",
+          "email": "alan@bjerre.nu",
+          "telefon": "22952292",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-12",
+      "label": "Lod 12 a",
+      "personer": [
+        {
+          "id": "p-22",
+          "navn": "",
+          "email": "",
+          "telefon": "",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-13",
+      "label": "Lod 12 b",
+      "personer": [
+        {
+          "id": "p-23",
+          "navn": "Joanna Morandin",
+          "email": "jomorandin@gmail.com",
+          "telefon": "23900924",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        },
+        {
+          "id": "p-24",
+          "navn": "Lars Keller",
+          "email": "larskeller@gmail.com",
+          "telefon": "20240505",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-14",
+      "label": "Lod 12 c",
+      "personer": [
+        {
+          "id": "p-25",
+          "navn": "Katja",
+          "email": "",
+          "telefon": "",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        },
+        {
+          "id": "p-26",
+          "navn": "Simon",
+          "email": "",
+          "telefon": "",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-15",
+      "label": "Lod 13",
+      "personer": [
+        {
+          "id": "p-27",
+          "navn": "Claus Holm Jacobsen",
+          "email": "clausholmjacobsen@gmail.com",
+          "telefon": "26794500",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        },
+        {
+          "id": "p-28",
+          "navn": "Nina Olsen Lauridsen",
+          "email": "ninaolauridsen@gmail.com",
+          "telefon": "61331301",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-16",
+      "label": "Lod 14",
+      "personer": [
+        {
+          "id": "p-29",
+          "navn": "John Jørgensen",
+          "email": "johnogbirk@gmail.com",
+          "telefon": "61769510",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        },
+        {
+          "id": "p-30",
+          "navn": "Katrine Hald",
+          "email": "katrinehald@hotmail.com",
+          "telefon": "30209740",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-17",
+      "label": "Lod 15",
+      "personer": [
+        {
+          "id": "p-31",
+          "navn": "Esben Enevoldsen Rahr",
+          "email": "mrrahr@gmail.com",
+          "telefon": "61657535",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        },
+        {
+          "id": "p-32",
+          "navn": "Maya Emilie Enevoldsen Rahr",
+          "email": "mayafriland@gmail.com",
+          "telefon": "26854255",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-18",
+      "label": "Lod 16",
+      "personer": [
+        {
+          "id": "p-33",
+          "navn": "Kent Olsen",
+          "email": "kent.olsen@gmail.com",
+          "telefon": "40272030",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-19",
+      "label": "Lod 17",
+      "personer": [
+        {
+          "id": "p-34",
+          "navn": "Mette Lundorff Laursen",
+          "email": "mettelundorff@yahoo.dk",
+          "telefon": "",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-20",
+      "label": "Lod 18",
+      "personer": [
+        {
+          "id": "p-35",
+          "navn": "Ole",
+          "email": "vedfolner@hotmail.com",
+          "telefon": "41933355",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-21",
+      "label": "Lod 19",
+      "personer": [
+        {
+          "id": "p-36",
+          "navn": "Thomas Birk Lynnerup",
+          "email": "thomaslynnerup@gmail.com",
+          "telefon": "60607608",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        },
+        {
+          "id": "p-37",
+          "navn": "Thea Hestbjerg",
+          "email": "thea_hestbjerg@hotmail.com",
+          "telefon": "27136224",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-22",
+      "label": "Lod 20",
+      "personer": [
+        {
+          "id": "p-38",
+          "navn": "Lone Mølleskov",
+          "email": "lojopost@gmail.com",
+          "telefon": "24202488",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        },
+        {
+          "id": "p-39",
+          "navn": "Johannes Mølleskov",
+          "email": "lojopost@gmail.com",
+          "telefon": "29922013",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-23",
+      "label": "Lod 21",
+      "personer": [
+        {
+          "id": "p-40",
+          "navn": "Mariane Lynge",
+          "email": "marianelyng@gmail.com",
+          "telefon": "30302137",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        },
+        {
+          "id": "p-41",
+          "navn": "Thomas Andersen",
+          "email": "thomasa77@gmail.com",
+          "telefon": "29438031",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-24",
+      "label": "Lod 22 B",
+      "personer": [
+        {
+          "id": "p-42",
+          "navn": "Birthe Blåbjerg Jakobsen",
+          "email": "birthejakobsen@hotmail.com",
+          "telefon": "30273526",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-25",
+      "label": "Lod 22 A",
+      "personer": [
+        {
+          "id": "p-43",
+          "navn": "Jacob Nielsen",
+          "email": "fuelfinder@gmail.com",
+          "telefon": "60898955",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-26",
+      "label": "Lod 22 C",
+      "personer": [
+        {
+          "id": "p-44",
+          "navn": "Helle Hestbjerg",
+          "email": "helle.hestbjerg@gmail.com",
+          "telefon": "72201891",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-27",
+      "label": "Lod 23",
+      "personer": [
+        {
+          "id": "p-45",
+          "navn": "Dennis Døngart",
+          "email": "dennisdongart@hotmail.com",
+          "telefon": "29846393",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        },
+        {
+          "id": "p-46",
+          "navn": "Sophia Juliane Lydolph",
+          "email": "frilandsmamma@gmail.com",
+          "telefon": "28712804",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-28",
+      "label": "Lod 24",
+      "personer": [
+        {
+          "id": "p-47",
+          "navn": "Lærke",
+          "email": "leark911@hotmail.com",
+          "telefon": "26813104",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        },
+        {
+          "id": "p-48",
+          "navn": "Christian",
+          "email": "christianstrautins@icloud.com",
+          "telefon": "61469437",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-29",
+      "label": "Lod 25",
+      "personer": [
+        {
+          "id": "p-49",
+          "navn": "Lise Maarbjerg",
+          "email": "lisemaarbjerg@gmail.com",
+          "telefon": "20666581",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        },
+        {
+          "id": "p-50",
+          "navn": "Jakob Harms Larsen",
+          "email": "jakobopal@gmail.com",
+          "telefon": "24941352",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-30",
+      "label": "Lod 26",
+      "personer": [
+        {
+          "id": "p-51",
+          "navn": "Pelse Asboe",
+          "email": "hellepelse@gmail.com",
+          "telefon": "28101165",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-31",
+      "label": "Lod 27 A",
+      "personer": [
+        {
+          "id": "p-52",
+          "navn": "Anna-Birthe Mokrzyczka",
+          "email": "ann@amoka.dk",
+          "telefon": "60750509",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        },
+        {
+          "id": "p-53",
+          "navn": "Mik Torfing",
+          "email": "michael@torfing.dk",
+          "telefon": "61714700",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-32",
+      "label": "Lod 27 B",
+      "personer": [
+        {
+          "id": "p-54",
+          "navn": "Kristine Haaber Hauch",
+          "email": "kristinehaaber@hotmail.com",
+          "telefon": "22410790",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        },
+        {
+          "id": "p-55",
+          "navn": "Andreas Haaber Hauch",
+          "email": "andreashauch@gmail.com",
+          "telefon": "41579445",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-33",
+      "label": "Lod 28",
+      "personer": [
+        {
+          "id": "p-56",
+          "navn": "Jane Holbæk Rønn",
+          "email": "jane.h.roenn@gmail.com",
+          "telefon": "26133133",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        },
+        {
+          "id": "p-57",
+          "navn": "Mark Peter Rønn",
+          "email": "",
+          "telefon": "",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        },
+        {
+          "id": "p-58",
+          "navn": "Christian",
+          "email": "",
+          "telefon": "",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-34",
+      "label": "Lod 29",
+      "personer": [
+        {
+          "id": "p-59",
+          "navn": "Ditte Waaler",
+          "email": "dittewaaler@gmail.com",
+          "telefon": "23901063",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        },
+        {
+          "id": "p-60",
+          "navn": "Merlin North",
+          "email": "merlin.north@gmail.com",
+          "telefon": "60587413",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-35",
+      "label": "Lod 30",
+      "personer": [
+        {
+          "id": "p-61",
+          "navn": "Karoline Nolsø Aaen",
+          "email": "knaaen@gmail.com",
+          "telefon": "24233883",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        },
+        {
+          "id": "p-62",
+          "navn": "Tycho Holcomb",
+          "email": "tycho@friland.org",
+          "telefon": "29864778",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-36",
+      "label": "Lod 31",
+      "personer": [
+        {
+          "id": "p-63",
+          "navn": "Claus Jørgensen",
+          "email": "rastapus1972@hotmail.com",
+          "telefon": "28972837",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-37",
+      "label": "Lod 32",
+      "personer": [
+        {
+          "id": "p-64",
+          "navn": "Mathias Andersen",
+          "email": "mathias0andersen@gmail.com",
+          "telefon": "31772111",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        },
+        {
+          "id": "p-65",
+          "navn": "Laura Bailon",
+          "email": "laura.bailon@gmail.com",
+          "telefon": "29209297",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-38",
+      "label": "Lod 33",
+      "personer": [
+        {
+          "id": "p-66",
+          "navn": "David Westervik",
+          "email": "david.westervik@gmail.com",
+          "telefon": "31130951",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        },
+        {
+          "id": "p-67",
+          "navn": "Alessia Ulfe Bandini",
+          "email": "",
+          "telefon": "",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-39",
+      "label": "Lod 34",
+      "personer": [
+        {
+          "id": "p-68",
+          "navn": "Inger Slots",
+          "email": "ingerslots@gmail.com",
+          "telefon": "61657603",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        },
+        {
+          "id": "p-69",
+          "navn": "Jørgen Gudmann Hansen",
+          "email": "slotshansen@gmail.com",
+          "telefon": "40315181",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-40",
+      "label": "Lod 35",
+      "personer": [
+        {
+          "id": "p-70",
+          "navn": "Malene Lærke Kidmose Tho",
+          "email": "miss.laerke@gmail.com",
+          "telefon": "42600864",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        },
+        {
+          "id": "p-71",
+          "navn": "Jacob Thorsen",
+          "email": "jacob@jacobthorsen.dk",
+          "telefon": "42608808",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-41",
+      "label": "Lod 36",
+      "personer": [
+        {
+          "id": "p-72",
+          "navn": "Laila Hygebjerg",
+          "email": "laila@etojeblik.dk",
+          "telefon": "41411510",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        },
+        {
+          "id": "p-73",
+          "navn": "Nikolaj Hygebjerg",
+          "email": "nikolaj@gamesinc.dk",
+          "telefon": "41411505",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-42",
+      "label": "Lod 37 A",
+      "personer": [
+        {
+          "id": "p-74",
+          "navn": "\"Bocaj\" Jacob Hall",
+          "email": "bocajhall@gmail.com",
+          "telefon": "21743065",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        },
+        {
+          "id": "p-75",
+          "navn": "Ann Doris Justesen",
+          "email": "adj@primanet.dk",
+          "telefon": "51786551",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "lod-43",
+      "label": "Lod 37 B",
+      "personer": [
+        {
+          "id": "p-76",
+          "navn": "Lars Bo Baadsgaard",
+          "email": "lbbaadsgaard@gmail.com",
+          "telefon": "27102666",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        },
+        {
+          "id": "p-77",
+          "navn": "Annette Holtet Larsen",
+          "email": "annette.holtet.larsen@gmail.com",
+          "telefon": "23435397",
+          "notat": "",
+          "betalt": {
+            "2025": false,
+            "2026": false,
+            "2027": false,
+            "2028": false,
+            "2029": false,
+            "2030": false
+          }
+        }
+      ]
+    }
+  ]
+}

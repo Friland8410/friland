@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kontoplan – Andelsforeningen Friland</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    .kontoplan-header { padding: 1.5rem 2rem; background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%); color: white; }
+    .kontoplan-header h1 { font-family: 'Crimson Pro', Georgia, serif; margin: 0 0 0.25rem 0; font-size: 1.75rem; }
+    .kontoplan-header a { color: rgba(255,255,255,0.95); text-decoration: none; font-size: 0.9rem; }
+    .kontoplan-header a:hover { text-decoration: underline; }
+    .kontoplan-toolbar { display: flex; gap: 1rem; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; }
+    .kontoplan-toolbar input { padding: 0.5rem 0.75rem; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; min-width: 200px; }
+    .kontoplan-tabel { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    .kontoplan-tabel th, .kontoplan-tabel td { padding: 0.4rem 0.75rem; text-align: left; border-bottom: 1px solid var(--border); }
+    .kontoplan-tabel th { background: var(--bg-secondary); font-weight: 600; color: var(--text-secondary); position: sticky; top: 0; }
+    .kontoplan-tabel .konto-nr { font-variant-numeric: tabular-nums; width: 5em; }
+    .kontoplan-tabel .konto-balance { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .kontoplan-tabel .konto-balance.negativ { color: var(--positive); }
+    .kontoplan-tabel tr.type-4 td { font-weight: 600; background: rgba(45, 90, 74, 0.06); }
+    .kontoplan-tabel tr.type-3 td { font-weight: 500; background: rgba(45, 90, 74, 0.03); }
+    .kontoplan-wrapper { max-height: calc(100vh - 200px); overflow-y: auto; }
+    .kontoplan-info { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem; }
+  </style>
+</head>
+<body>
+  <nav class="topmenu">
+    <a href="oversigt.html">Oversigt</a>
+    <a href="send-faktura.html">Send faktura</a>
+    <a href="forbrug-indtastet.html">Forbrug</a>
+    <a href="kontingent.html">Kontingent</a>
+    <a href="brugeradmin.html" id="navBrugeradmin" style="display:none;">Brugeradmin</a>
+    <div class="topmenu-dropdown active">
+      <button type="button" class="topmenu-dropdown-toggle" aria-expanded="false" aria-haspopup="true">Fra Economic</button>
+      <div class="topmenu-dropdown-panel" role="menu">
+        <a href="index.html" role="menuitem">Årsregnskab</a>
+        <a href="saldobalance-supabase.html" role="menuitem">Saldobalancer</a>
+        <a href="kontoplan.html" class="active" role="menuitem">Kontoplan</a>
+        <a href="forbrug.html" role="menuitem">Forbrug fra Economic</a>
+      </div>
+    </div>
+  </nav>
+  <header class="kontoplan-header">
+    <h1>Andelsforeningen Friland</h1>
+    <p style="margin:0; opacity:0.9; font-size:1.1rem;">Kontoplan – aktuelle saldi</p>
+  </header>
+
+  <main class="content" style="padding-top: 2rem;">
+    <section class="regnskabssektion">
+      <div class="kontoplan-toolbar">
+        <label for="kontoplan-sog">Søg:</label>
+        <input type="text" id="kontoplan-sog" placeholder="Kontonr eller navn..." autofocus>
+        <span id="kontoplan-antalt" class="kontoplan-info"></span>
+      </div>
+      <p class="kontoplan-info">Kontoplan med aktuelle saldi (fra kontoplan Excel). Type 1 = detaljekonto, 3 = sumkonto, 4 = overskrift.</p>
+      <div class="kontoplan-wrapper">
+        <table class="regnskabstabel kontoplan-tabel">
+          <thead>
+            <tr>
+              <th class="konto-nr">Nr.</th>
+              <th>Navn</th>
+              <th>Type</th>
+              <th>Moms</th>
+              <th class="konto-balance">Balance</th>
+            </tr>
+          </thead>
+          <tbody id="kontoplan-body"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      const body = document.getElementById('kontoplan-body');
+      const sog = document.getElementById('kontoplan-sog');
+      const antalt = document.getElementById('kontoplan-antalt');
+
+      function formatBeloeb(n) {
+        if (n == null || isNaN(n)) return '-';
+        const r = Math.round(n * 100) / 100;
+        const str = r.toLocaleString('da-DK', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        return r < 0 ? str : str;
+      }
+
+      function bygRække(k) {
+        const typeClass = k.type === 4 ? 'type-4' : k.type === 3 ? 'type-3' : '';
+        const balClass = k.balance < 0 ? 'negativ' : '';
+        const navn = (k.navn || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return '<tr class="' + typeClass + '" data-nr="' + k.nr + '" data-navn="' + navn.toLowerCase() + '">' +
+          '<td class="konto-nr">' + k.nr + '</td>' +
+          '<td>' + navn + '</td>' +
+          '<td>' + (k.type || '-') + '</td>' +
+          '<td>' + (k.moms || '-') + '</td>' +
+          '<td class="konto-balance ' + balClass + '">' + formatBeloeb(k.balance) + '</td></tr>';
+      }
+
+      let data = [];
+
+      fetch('kontoplan-data.json', { credentials: 'include' })
+        .then((r) => r.json())
+        .then((konti) => {
+          data = konti;
+          opdaterTabel(data);
+        })
+        .catch((err) => {
+          body.innerHTML = '<tr><td colspan="5">Kunne ikke indlæse kontoplan: ' + err.message + '</td></tr>';
+        });
+
+      function filtrer(sogtekst) {
+        const s = (sogtekst || '').toLowerCase().trim();
+        if (!s) return data;
+        return data.filter((k) =>
+          String(k.nr).includes(s) ||
+          (k.navn && k.navn.toLowerCase().includes(s))
+        );
+      }
+
+      function opdaterTabel(konti) {
+        body.innerHTML = konti.map(bygRække).join('');
+        antalt.textContent = konti.length + ' konti';
+      }
+
+      sog.addEventListener('input', function () {
+        opdaterTabel(filtrer(sog.value));
+      });
+    })();
+  </script>
+  <script src="auth-nav.js"></script>
+</body>
+</html>

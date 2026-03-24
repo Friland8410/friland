@@ -1,0 +1,1746 @@
+[
+  {
+    "nr": "1000",
+    "navn": "RESULTATOPGØRELSE",
+    "type": "4",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "1001",
+    "navn": "Omsætning",
+    "type": "4",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "1010",
+    "navn": "Kontingent",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": -1217235.76
+  },
+  {
+    "nr": "1020",
+    "navn": "Grundskyld",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": -424172.4
+  },
+  {
+    "nr": "1021",
+    "navn": "1",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "1025",
+    "navn": "Salg af varer til EU",
+    "type": "1",
+    "moms": "UEUV",
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "1026",
+    "navn": "Salg af ydelser til EU",
+    "type": "1",
+    "moms": "UY0",
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "1030",
+    "navn": "Salg til kunder u/moms",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "1040",
+    "navn": "Hus/lodsalg",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": -1191495
+  },
+  {
+    "nr": "1050",
+    "navn": "Messe overskud",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": -35949.9
+  },
+  {
+    "nr": "1051",
+    "navn": "Rundvisningspenge",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "1060",
+    "navn": "Projektor opsparing",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": -780
+  },
+  {
+    "nr": "1099",
+    "navn": "Omsætning i alt",
+    "type": "3",
+    "moms": null,
+    "sumfra": "1001",
+    "balance": -2869633.06
+  },
+  {
+    "nr": "1300",
+    "navn": "Faste Udgifter",
+    "type": "4",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "1310",
+    "navn": "Administration",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 34005.39
+  },
+  {
+    "nr": "1311",
+    "navn": "Fonden Nødværge",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 2738.55
+  },
+  {
+    "nr": "1312",
+    "navn": "Ansvarsforsikring",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 12735.73
+  },
+  {
+    "nr": "1313",
+    "navn": "Bankgebyrer",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 20.9
+  },
+  {
+    "nr": "1320",
+    "navn": "Reno Djurs",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 60625.27
+  },
+  {
+    "nr": "1321",
+    "navn": "Generalforsamling",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 47960
+  },
+  {
+    "nr": "1324",
+    "navn": "Grundskyld opkrævning",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 733783.76
+  },
+  {
+    "nr": "1325",
+    "navn": "Drift af ressourceplads",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 14077.14
+  },
+  {
+    "nr": "1326",
+    "navn": "Vedligeholdelse af veje",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 23002.89
+  },
+  {
+    "nr": "1327",
+    "navn": "Pleje af fællesarealer",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 66927.3
+  },
+  {
+    "nr": "1328",
+    "navn": "Medlemsskab af foreninger",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 15000
+  },
+  {
+    "nr": "1330",
+    "navn": "Vareforbrug (lagermodul)",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "1380",
+    "navn": "Frilandsaften rådighedsbeløb",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 3956.95
+  },
+  {
+    "nr": "1385",
+    "navn": "Økonomigruppens rådighedsbeløb",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 901.23
+  },
+  {
+    "nr": "1399",
+    "navn": "Faste Udgifter i alt",
+    "type": "3",
+    "moms": null,
+    "sumfra": "1300",
+    "balance": 1015735.11
+  },
+  {
+    "nr": "2000",
+    "navn": "Dækningsbidrag",
+    "type": "3",
+    "moms": null,
+    "sumfra": "1000",
+    "balance": -1853897.95
+  },
+  {
+    "nr": "2500",
+    "navn": "Budget forslag vedtaget på GF",
+    "type": "4",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "2505",
+    "navn": "Uglen",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "2506",
+    "navn": "Ping Pong Plads",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "2507",
+    "navn": "Udgifter til messe",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 11731.32
+  },
+  {
+    "nr": "2508",
+    "navn": "Visionsdage",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 9654.16
+  },
+  {
+    "nr": "2509",
+    "navn": "udgifter til messe",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 1893.7
+  },
+  {
+    "nr": "2510",
+    "navn": "Arbejdsdage",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 21550.3
+  },
+  {
+    "nr": "2511",
+    "navn": "Ravnebidrag",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 194000
+  },
+  {
+    "nr": "2512",
+    "navn": "Æbledag",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 1912.5
+  },
+  {
+    "nr": "2513",
+    "navn": "Remise",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 19600
+  },
+  {
+    "nr": "2518",
+    "navn": "Sct. Hans fest",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 5150.62
+  },
+  {
+    "nr": "2519",
+    "navn": "Jubilæumsfejring",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 35772.25
+  },
+  {
+    "nr": "2520",
+    "navn": "Fællesspisning",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 92145.78
+  },
+  {
+    "nr": "2521",
+    "navn": "Spontane gaver",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 3156
+  },
+  {
+    "nr": "2529",
+    "navn": "Liv i Ravnen",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 25801.75
+  },
+  {
+    "nr": "2530",
+    "navn": "Solhvervsfest",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 47598.29
+  },
+  {
+    "nr": "2531",
+    "navn": "Fonden Nødværge afklaring jura omkring opløsning FE",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "2532",
+    "navn": "Juridisk afklaring til Ravnelanding",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "2533",
+    "navn": "Juridisk assistance salgsgruppen",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 4125
+  },
+  {
+    "nr": "2610",
+    "navn": "Pplads Syd",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "2611",
+    "navn": "Pplads Lod 30",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "2615",
+    "navn": "Grønne Korridorer",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "2620",
+    "navn": "Fartdæmpere",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "2625",
+    "navn": "MS Projekt",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "2626",
+    "navn": "Vestmarken",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "2630",
+    "navn": "Dræn & Brønd",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 100215.68
+  },
+  {
+    "nr": "2631",
+    "navn": "Fase 1 fælleareal - Hyggebyg",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "2632",
+    "navn": "Legeplads udvalg",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 665.25
+  },
+  {
+    "nr": "2633",
+    "navn": "Skovområdet fase 1",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "2635",
+    "navn": "Opretning af veje",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 3750
+  },
+  {
+    "nr": "2636",
+    "navn": "Indkøb til fælles bedste",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 4695
+  },
+  {
+    "nr": "2637",
+    "navn": "Fælleshave",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 6147
+  },
+  {
+    "nr": "2638",
+    "navn": "Syddjurs Kommune opkrævning",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 2025.54
+  },
+  {
+    "nr": "2639",
+    "navn": "Opretning af veje",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "2640",
+    "navn": "projekter godkendt på GF",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 15169.86
+  },
+  {
+    "nr": "2650",
+    "navn": "Budget forslag SUM",
+    "type": "3",
+    "moms": null,
+    "sumfra": "2505",
+    "balance": 606760
+  },
+  {
+    "nr": "2700",
+    "navn": "Salgs- og rejseomkostninger",
+    "type": "4",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "2750",
+    "navn": "Restaurationsbesøg",
+    "type": "1",
+    "moms": "REP",
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "2754",
+    "navn": "Gaver og blomster",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "2770",
+    "navn": "Rejseudgifter",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "2800",
+    "navn": "Annoncer og reklame",
+    "type": "1",
+    "moms": "I25",
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "2811",
+    "navn": "Fragt m/moms",
+    "type": "1",
+    "moms": "I25",
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "2899",
+    "navn": "Salgs- og rejseomkostninger i alt",
+    "type": "3",
+    "moms": null,
+    "sumfra": "2700",
+    "balance": 0
+  },
+  {
+    "nr": "3100",
+    "navn": "Autodrift - personbiler",
+    "type": "4",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "3110",
+    "navn": "Brændstof",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "3120",
+    "navn": "Bilforsikring",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "3130",
+    "navn": "Vægtafgift",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "3140",
+    "navn": "Reparation/vedligeholdelse",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "3199",
+    "navn": "Autodrift - personbiler i alt",
+    "type": "3",
+    "moms": null,
+    "sumfra": "3100",
+    "balance": 0
+  },
+  {
+    "nr": "3400",
+    "navn": "Lokaleomkostninger",
+    "type": "4",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "3410",
+    "navn": "Lokaleleje",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "3420",
+    "navn": "El, vand og gas",
+    "type": "1",
+    "moms": "I25",
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "3430",
+    "navn": "Vedligeholdelse og rengøring",
+    "type": "1",
+    "moms": "I25",
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "3450",
+    "navn": "Forsikringer (lokale)",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "3499",
+    "navn": "Lokaleomkostninger i alt",
+    "type": "3",
+    "moms": null,
+    "sumfra": "3400",
+    "balance": 0
+  },
+  {
+    "nr": "3500",
+    "navn": "Administrationsomkostninger",
+    "type": "4",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "3600",
+    "navn": "Kontorartikler og tryksager",
+    "type": "1",
+    "moms": "I25",
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "3601",
+    "navn": "Avishold",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "3604",
+    "navn": "Edb-udgifter / software",
+    "type": "1",
+    "moms": "I25",
+    "sumfra": null,
+    "balance": 3094.4
+  },
+  {
+    "nr": "3610",
+    "navn": "Rep./vedligeholdelse af inventar",
+    "type": "1",
+    "moms": "I25",
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "3617",
+    "navn": "Mindre anskaffelser",
+    "type": "1",
+    "moms": "I25",
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "3618",
+    "navn": "Mindre anskaffelser, omvendt betalingspligt",
+    "type": "1",
+    "moms": "OBPK",
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "3620",
+    "navn": "Telefon",
+    "type": "1",
+    "moms": "I25",
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "3621",
+    "navn": "Internetforbindelse",
+    "type": "1",
+    "moms": "I25",
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "3628",
+    "navn": "Porto og gebyrer",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "3630",
+    "navn": "Bankgebyr",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 12548.37
+  },
+  {
+    "nr": "3640",
+    "navn": "Revisor",
+    "type": "1",
+    "moms": "I25",
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "3645",
+    "navn": "Advokat",
+    "type": "1",
+    "moms": "I25",
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "3650",
+    "navn": "Forsikringer",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 4525.24
+  },
+  {
+    "nr": "3660",
+    "navn": "Faglitteratur m/moms",
+    "type": "1",
+    "moms": "I25",
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "3661",
+    "navn": "Faglitteratur u/moms",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "3662",
+    "navn": "Kontingenter m/moms",
+    "type": "1",
+    "moms": "I25",
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "3663",
+    "navn": "Kontingenter u/moms",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 1000
+  },
+  {
+    "nr": "3664",
+    "navn": "Web-hotel og domænenavne",
+    "type": "1",
+    "moms": "I25",
+    "sumfra": null,
+    "balance": 1380.8
+  },
+  {
+    "nr": "3670",
+    "navn": "Leje/leasing af driftsmidler",
+    "type": "1",
+    "moms": "I25",
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "3720",
+    "navn": "Tab på debitorer",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": -684.35
+  },
+  {
+    "nr": "3770",
+    "navn": "Kassedifferencer mv.",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 1118.8
+  },
+  {
+    "nr": "3780",
+    "navn": "Ej fradragsberettigede omkostninger",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "3799",
+    "navn": "Administrationsomkostninger i alt",
+    "type": "3",
+    "moms": null,
+    "sumfra": "3500",
+    "balance": 22983.26
+  },
+  {
+    "nr": "3800",
+    "navn": "Resultat før afskrivninger",
+    "type": "3",
+    "moms": null,
+    "sumfra": "1000",
+    "balance": -1224154.69
+  },
+  {
+    "nr": "3900",
+    "navn": "Afskrivninger",
+    "type": "4",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "3910",
+    "navn": "Afskrivning, indretning lejede lokaler",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "3940",
+    "navn": "Afskrivning, driftsmidler og inventar",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "3950",
+    "navn": "Afskrivning, edb",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "3999",
+    "navn": "Afskrivninger i alt",
+    "type": "3",
+    "moms": null,
+    "sumfra": "3900",
+    "balance": 0
+  },
+  {
+    "nr": "4000",
+    "navn": "Resultat før renter",
+    "type": "3",
+    "moms": null,
+    "sumfra": "1000",
+    "balance": -1224154.69
+  },
+  {
+    "nr": "4300",
+    "navn": "Renteindtægter",
+    "type": "4",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "4310",
+    "navn": "Renteindtægt, bank",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": -218.77
+  },
+  {
+    "nr": "4360",
+    "navn": "Renteindtægt, debitorer",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "4365",
+    "navn": "Rykkergebyr, debitorer",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "4380",
+    "navn": "Valutakursdifference, debitorer gevinst",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "4381",
+    "navn": "Valutakursdifference, kreditorer gevinst",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "4399",
+    "navn": "Renteindtægter i alt",
+    "type": "3",
+    "moms": null,
+    "sumfra": "4300",
+    "balance": -218.77
+  },
+  {
+    "nr": "4400",
+    "navn": "Renteudgifter",
+    "type": "4",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "4410",
+    "navn": "Renteudgift, bank",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 1789.94
+  },
+  {
+    "nr": "4450",
+    "navn": "Låneomkostninger",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "4460",
+    "navn": "Renteudgift, kreditorer",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "4465",
+    "navn": "Renteudgift, Told & Skat",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "4480",
+    "navn": "Valutakursdifference, debitorer tab",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "4481",
+    "navn": "Valutakursdifference, kreditorer tab",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "4499",
+    "navn": "Renteudgifter i alt",
+    "type": "3",
+    "moms": null,
+    "sumfra": "4400",
+    "balance": 1789.94
+  },
+  {
+    "nr": "4500",
+    "navn": "Resultat før ekstraordinære poster",
+    "type": "3",
+    "moms": null,
+    "sumfra": "1000",
+    "balance": -1222583.52
+  },
+  {
+    "nr": "4600",
+    "navn": "Ekstraordinære poster",
+    "type": "4",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "4610",
+    "navn": "Ekstraordinære indtægter m/moms",
+    "type": "1",
+    "moms": "U25",
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "4620",
+    "navn": "Ekstraordinære indtægter u/moms",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": -785.1
+  },
+  {
+    "nr": "4630",
+    "navn": "Ekstraordinære udgifter m/moms",
+    "type": "1",
+    "moms": "I25",
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "4640",
+    "navn": "Ekstraordinære udgifter u/moms",
+    "type": "1",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "4699",
+    "navn": "Ekstraordinære poster i alt",
+    "type": "3",
+    "moms": null,
+    "sumfra": "4600",
+    "balance": -785.1
+  },
+  {
+    "nr": "4990",
+    "navn": "PERIODENS RESULTAT",
+    "type": "3",
+    "moms": null,
+    "sumfra": "1000",
+    "balance": -1223368.62
+  },
+  {
+    "nr": "5000",
+    "navn": "AKTIVER",
+    "type": "5",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "5010",
+    "navn": "Anlægsaktiver",
+    "type": "4",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "5110",
+    "navn": "Indretning af lejede lokaler",
+    "type": "4",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "5111",
+    "navn": "Indretning, anskaffelse primo",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "5112",
+    "navn": "Indretning, årets tilgang",
+    "type": "2",
+    "moms": "I25",
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "5113",
+    "navn": "Indretning, årets afgang",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "5116",
+    "navn": "Indretning, afskrivning primo",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "5117",
+    "navn": "Indretning, årets afskrivninger",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "5119",
+    "navn": "Indretning af lejede lokaler i alt",
+    "type": "3",
+    "moms": null,
+    "sumfra": "5110",
+    "balance": 0
+  },
+  {
+    "nr": "5220",
+    "navn": "Driftsmidler & inventar",
+    "type": "4",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "5221",
+    "navn": "Driftsmidler, anskaffelse primo",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "5222",
+    "navn": "Driftsmidler, årets tilgang",
+    "type": "2",
+    "moms": "I25",
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "5223",
+    "navn": "Driftsmidler, årets afgang",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "5226",
+    "navn": "Driftsmidler, afskrivning primo",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "5227",
+    "navn": "Driftsmidler, årets afskrivninger",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "5229",
+    "navn": "Driftsmidler & inventar i alt",
+    "type": "3",
+    "moms": null,
+    "sumfra": "5220",
+    "balance": 0
+  },
+  {
+    "nr": "5230",
+    "navn": "Edb-anlæg",
+    "type": "4",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "5231",
+    "navn": "Edb-anlæg, anskaffelse primo",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "5232",
+    "navn": "Edb-anlæg, årets tilgang",
+    "type": "2",
+    "moms": "I25",
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "5233",
+    "navn": "Edb-anlæg, årets afgang",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "5236",
+    "navn": "Edb-anlæg, afskrivning primo",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "5237",
+    "navn": "Edb-anlæg, årets afskrivninger",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "5239",
+    "navn": "Edb-anlæg i alt",
+    "type": "3",
+    "moms": null,
+    "sumfra": "5230",
+    "balance": 0
+  },
+  {
+    "nr": "5310",
+    "navn": "Deposita",
+    "type": "4",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "5312",
+    "navn": "Huslejedepositum m/moms",
+    "type": "2",
+    "moms": "I25",
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "5313",
+    "navn": "Huslejedepositum u/moms",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "5322",
+    "navn": "Leasingdepositum",
+    "type": "2",
+    "moms": "I25",
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "5329",
+    "navn": "Deposita i alt",
+    "type": "3",
+    "moms": null,
+    "sumfra": "5310",
+    "balance": 0
+  },
+  {
+    "nr": "5499",
+    "navn": "Anlægsaktiver i alt",
+    "type": "3",
+    "moms": null,
+    "sumfra": "5010",
+    "balance": 0
+  },
+  {
+    "nr": "5500",
+    "navn": "Omsætningsaktiver",
+    "type": "4",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "5520",
+    "navn": "Varelager",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "5600",
+    "navn": "Debitorer",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 25284
+  },
+  {
+    "nr": "5650",
+    "navn": "Andre tilgodehavender",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "5654",
+    "navn": "Igangværende arbejder - aktiviteter (projekt)",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "5655",
+    "navn": "Igangværende arbejder - omkostninger (projekt)",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "5660",
+    "navn": "Forudbetalte poster",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "5800",
+    "navn": "Merkurandele",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "5801",
+    "navn": "Kooperativet ejerandel",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 25000
+  },
+  {
+    "nr": "5802",
+    "navn": "Garantbevis Rønde Sparekasse",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 20000
+  },
+  {
+    "nr": "5810",
+    "navn": "Kassebeholdning",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "5820",
+    "navn": "Konto kontigent og drift",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 357133.11
+  },
+  {
+    "nr": "5830",
+    "navn": "Foreningens opsparing - buffer",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 79510.59
+  },
+  {
+    "nr": "5840",
+    "navn": "Konto til skyldige poster",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 17724.97
+  },
+  {
+    "nr": "5850",
+    "navn": "Salgskonto",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 1192087.56
+  },
+  {
+    "nr": "5860",
+    "navn": "Kooperativet Kundekort",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "5980",
+    "navn": "Omsætningsaktiver i alt",
+    "type": "3",
+    "moms": null,
+    "sumfra": "5500",
+    "balance": 1716740.23
+  },
+  {
+    "nr": "5990",
+    "navn": "AKTIVER I ALT",
+    "type": "3",
+    "moms": null,
+    "sumfra": "5000",
+    "balance": 1716740.23
+  },
+  {
+    "nr": "6000",
+    "navn": "PASSIVER",
+    "type": "5",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "6100",
+    "navn": "EGENKAPITAL",
+    "type": "4",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "6110",
+    "navn": "Kapitalkonto, primo",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": -412636.24
+  },
+  {
+    "nr": "6112",
+    "navn": "Periodens resultat",
+    "type": "6",
+    "moms": null,
+    "sumfra": null,
+    "balance": -1223368.62
+  },
+  {
+    "nr": "6115",
+    "navn": "Hævninger, netto:",
+    "type": "4",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "6121",
+    "navn": "Årets indskud, øvrige",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "6130",
+    "navn": "Årets hævninger, kontant",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "6131",
+    "navn": "Årets hævninger, øvrige",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "6135",
+    "navn": "Mellemregning",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "6137",
+    "navn": "Nettohævet før B-skatter mv.",
+    "type": "3",
+    "moms": null,
+    "sumfra": "6115",
+    "balance": 0
+  },
+  {
+    "nr": "6138",
+    "navn": "Betalte B-skatter",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "6150",
+    "navn": "Hævet netto i alt",
+    "type": "3",
+    "moms": null,
+    "sumfra": "6115",
+    "balance": 0
+  },
+  {
+    "nr": "6199",
+    "navn": "EGENKAPITAL I ALT",
+    "type": "6",
+    "moms": null,
+    "sumfra": null,
+    "balance": -1636004.86
+  },
+  {
+    "nr": "6600",
+    "navn": "GÆLD",
+    "type": "4",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "6750",
+    "navn": "Kassekredit",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "6800",
+    "navn": "Kreditorer",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "6830",
+    "navn": "Skyldige omkostninger",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": -80735.37
+  },
+  {
+    "nr": "6900",
+    "navn": "Moms og afgifter",
+    "type": "4",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "6901",
+    "navn": "Skyldig moms, primo",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": -1118.8
+  },
+  {
+    "nr": "6902",
+    "navn": "Udgående (salg) moms",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "6903",
+    "navn": "Indgående (køb) moms",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 1118.8
+  },
+  {
+    "nr": "6906",
+    "navn": "Erhvervelsesmoms (køb i udland)",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "6907",
+    "navn": "Erhvervelsesmoms (modkonto)",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "6910",
+    "navn": "Olieafgift",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "6911",
+    "navn": "Elafgift",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "6914",
+    "navn": "CO2-afgift",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "6917",
+    "navn": "Betalt moms",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "6918",
+    "navn": "Moms og afgifter i alt",
+    "type": "3",
+    "moms": null,
+    "sumfra": "6900",
+    "balance": 0
+  },
+  {
+    "nr": "7999",
+    "navn": "GÆLD I ALT",
+    "type": "3",
+    "moms": null,
+    "sumfra": "6600",
+    "balance": -80735.37
+  },
+  {
+    "nr": "8999",
+    "navn": "PASSIVER I ALT",
+    "type": "6",
+    "moms": null,
+    "sumfra": null,
+    "balance": -1716740.23
+  },
+  {
+    "nr": "9900",
+    "navn": "Analyse/fejlkonto",
+    "type": "2",
+    "moms": null,
+    "sumfra": null,
+    "balance": 0
+  },
+  {
+    "nr": "9990",
+    "navn": "Nulkontrol",
+    "type": "3",
+    "moms": null,
+    "sumfra": "1000",
+    "balance": 0
+  }
+]

@@ -1,0 +1,218 @@
+{
+  "version": 1,
+  "periodLabel": "01.03.26 til 28.02.27",
+  "indtaegter": [
+    {
+      "id": "i1",
+      "label": "Kontigent for medlemmer",
+      "beloeb": 456750
+    },
+    {
+      "id": "i2",
+      "label": "Grundskyld Lodder opkræves for Fonden",
+      "beloeb": 134000
+    },
+    {
+      "id": "i3",
+      "label": "Grundskyld Lodder betales på opkrævning fra Skat",
+      "beloeb": -134000
+    },
+    {
+      "id": "i4",
+      "label": "Indtægter diverse ekstra",
+      "beloeb": 0
+    }
+  ],
+  "fasteUdgifter": [
+    {
+      "id": "f1",
+      "label": "Administration",
+      "budget": 0,
+      "forbrug": 0
+    },
+    {
+      "id": "f2",
+      "label": "Bankgebyr & rente",
+      "budget": 0,
+      "forbrug": 0
+    },
+    {
+      "id": "f3",
+      "label": "Drift af Ravnen",
+      "budget": 0,
+      "forbrug": 0
+    },
+    {
+      "id": "f4",
+      "label": "Reno Djurs",
+      "budget": 0,
+      "forbrug": 0
+    },
+    {
+      "id": "f5",
+      "label": "Generalforsamling",
+      "budget": 0,
+      "forbrug": 0
+    },
+    {
+      "id": "f6",
+      "label": "Grundskyld fællesareal",
+      "budget": 0,
+      "forbrug": 0
+    },
+    {
+      "id": "f7",
+      "label": "Drift af ressourceplads",
+      "budget": 0,
+      "forbrug": 0
+    },
+    {
+      "id": "f8",
+      "label": "Pleje af fællesarealer - fællesarealgruppen",
+      "budget": 0,
+      "forbrug": 0
+    },
+    {
+      "id": "f9",
+      "label": "Medlemsskab af foreninger",
+      "budget": 0,
+      "forbrug": 0
+    },
+    {
+      "id": "f10",
+      "label": "Arbejdsdage",
+      "budget": 0,
+      "forbrug": 0
+    },
+    {
+      "id": "f11",
+      "label": "Fonden Nødværge - årligt rådighedsbeløb",
+      "budget": 0,
+      "forbrug": 0
+    },
+    {
+      "id": "f12",
+      "label": "Fællesspisninger",
+      "budget": 0,
+      "forbrug": 0
+    },
+    {
+      "id": "f13",
+      "label": "Solhvervsfest 2026",
+      "budget": 0,
+      "forbrug": 0
+    },
+    {
+      "id": "f14",
+      "label": "Æbledag",
+      "budget": 0,
+      "forbrug": 0
+    },
+    {
+      "id": "f15",
+      "label": "Spontane gaver",
+      "budget": 0,
+      "forbrug": 0
+    },
+    {
+      "id": "f16",
+      "label": "Forsikring bestyrelse",
+      "budget": 0,
+      "forbrug": 0
+    }
+  ],
+  "raadighed": [
+    {
+      "id": "r1",
+      "label": "Frilands samlings rådighedsbeløb",
+      "budget": 0,
+      "forbrug": 0
+    },
+    {
+      "id": "r2",
+      "label": "Økonomigruppen rådighedsbeløb",
+      "budget": 0,
+      "forbrug": 0
+    }
+  ],
+  "projekter": [
+    {
+      "id": "p1",
+      "label": "Udbygning af ressourcepladsen",
+      "budget": 0,
+      "forbrug": 0
+    },
+    {
+      "id": "p2",
+      "label": "Akustikregulering i Ravnen",
+      "budget": 0,
+      "forbrug": 0
+    },
+    {
+      "id": "p3",
+      "label": "Køb af lille traktor",
+      "budget": 0,
+      "forbrug": 0
+    },
+    {
+      "id": "p4",
+      "label": "Lyd",
+      "budget": 0,
+      "forbrug": 0
+    },
+    {
+      "id": "p5",
+      "label": "Ressourceplads opdatering",
+      "budget": 0,
+      "forbrug": 0
+    }
+  ],
+  "kontingent": [
+    {
+      "id": "k1",
+      "label": "Voksne medlemmer",
+      "antal": 76,
+      "sats": 6000,
+      "total": 456000
+    },
+    {
+      "id": "k2",
+      "label": "Ungdoms medlemmer",
+      "antal": 3,
+      "sats": 250,
+      "total": 750
+    },
+    {
+      "id": "k3",
+      "label": "Lejere over 3 mdr. + korrektion til og fraflytning",
+      "antal": null,
+      "sats": null,
+      "total": 0
+    }
+  ],
+  "likviditetLinjer": [
+    {
+      "id": "l1",
+      "label": "Konto kontingent og drift",
+      "beloeb": 357133
+    },
+    {
+      "id": "l2",
+      "label": "Foreningens opsparing - buffer",
+      "beloeb": 79511
+    },
+    {
+      "id": "l3",
+      "label": "Konto til skyldige poster",
+      "beloeb": 17725
+    },
+    {
+      "id": "l4",
+      "label": "Kooperativet Kundekort",
+      "beloeb": 0
+    }
+  ],
+  "likviditetPrimo": 454369,
+  "likviditetUltimo": 554369,
+  "garantbevis": 20000
+}

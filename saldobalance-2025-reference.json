@@ -1,0 +1,5 @@
+{
+  "_info": "Reference fra saldobalance.xlsx (01.03.25–28.02.26). Brug til at verificere at e-conomic returnerer de korrekte tal. Eksportér dine konti herfra med format: [{ \"accountNumber\": \"1010\", \"name\": \"Kontingent\", \"balance\": -123456 }]",
+  "periode": "01.03.25 – 28.02.26",
+  "konti": []
+}

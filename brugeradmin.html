@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brugeradmin – Friland</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    .ba-panel { max-width: 40rem; margin: 1.5rem 0; padding: 1.25rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; }
+    .ba-panel h2 { margin: 0 0 1rem 0; font-size: 1.1rem; }
+    .ba-form { display: flex; flex-direction: column; gap: 0.85rem; }
+    .ba-form label { display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); }
+    .ba-form input, .ba-form select { padding: 0.5rem 0.65rem; border-radius: 6px; border: 1px solid var(--border); font: inherit; }
+    .ba-form button { align-self: flex-start; padding: 0.55rem 1.2rem; background: var(--accent); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; }
+    .ba-form button:hover { background: var(--accent-light); }
+    .ba-table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-card); margin-top: 2rem; }
+    table.ba { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    table.ba th, table.ba td { padding: 0.6rem 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+    table.ba th { background: var(--bg-secondary); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-secondary); }
+    table.ba .actions { white-space: nowrap; }
+    table.ba button { margin-right: 0.35rem; padding: 0.3rem 0.55rem; font-size: 0.8rem; border-radius: 4px; border: 1px solid var(--border); background: var(--bg-secondary); cursor: pointer; }
+    table.ba button.danger { border-color: #c44; color: #8b1a1a; }
+    .ba-error { padding: 1rem; background: #fde8e8; color: #8b1a1a; border-radius: 8px; margin: 1rem 0; }
+    .ba-info { font-size: 0.875rem; color: var(--text-secondary); line-height: 1.5; }
+    .ba-denied { padding: 2rem; text-align: center; color: var(--text-secondary); }
+  </style>
+</head>
+<body>
+  <nav class="topmenu">
+    <a href="oversigt.html">Oversigt</a>
+    <a href="send-faktura.html">Send faktura</a>
+    <a href="forbrug-indtastet.html">Forbrug</a>
+    <a href="kontingent.html">Kontingent</a>
+    <a href="brugeradmin.html" class="active" id="navBrugeradmin" style="display:none;">Brugeradmin</a>
+    <div class="topmenu-dropdown">
+      <button type="button" class="topmenu-dropdown-toggle" aria-expanded="false" aria-haspopup="true">Fra Economic</button>
+      <div class="topmenu-dropdown-panel" role="menu">
+        <a href="index.html" role="menuitem">Årsregnskab</a>
+        <a href="saldobalance-supabase.html" role="menuitem">Saldobalancer</a>
+        <a href="kontoplan.html" role="menuitem">Kontoplan</a>
+        <a href="forbrug.html" role="menuitem">Forbrug fra Economic</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="page-header">
+    <h1>Brugeradmin</h1>
+    <p class="subtitle">Opret brugere og tildel rolle — kun for administratorer</p>
+  </header>
+
+  <main class="content">
+    <div id="loginSektion" class="ba-panel" style="display:none;">
+      <h2>Log ind</h2>
+      <p class="ba-info">Du skal være logget ind som administrator for at bruge denne side.</p>
+      <div class="ba-form">
+        <label>Email
+          <input type="email" id="loginEmail" autocomplete="username" />
+        </label>
+        <label>Kode
+          <input type="password" id="loginKode" autocomplete="current-password" />
+        </label>
+        <button type="button" id="loginBtn">Log ind</button>
+      </div>
+    </div>
+
+    <div id="deniedSektion" class="ba-denied" style="display:none;">
+      <p>Du er logget ind, men har ikke administratorrettigheder. Kontakt en admin.</p>
+      <p><a href="index.html">Til forsiden</a></p>
+    </div>
+
+    <div id="adminIndhold" style="display:none;">
+      <div class="ba-panel">
+        <h2>Ny bruger</h2>
+        <div class="ba-form">
+          <label>Email
+            <input type="email" id="nyEmail" autocomplete="off" />
+          </label>
+          <label>Kode (min. 8 tegn)
+            <input type="password" id="nyKode" autocomplete="new-password" />
+          </label>
+          <label>Rolle
+            <select id="nyRolle">
+              <option value="user">Almindelig bruger</option>
+              <option value="bogholder">Bogholder</option>
+              <option value="admin">Administrator</option>
+            </select>
+          </label>
+          <button type="button" id="opretBtn">Opret bruger</button>
+        </div>
+      </div>
+
+      <div class="ba-panel">
+        <h2>Bogholder</h2>
+        <p class="ba-info">Mail til bilag og fakturaer fra siden &laquo;Send faktura&raquo; sendes hertil.</p>
+        <div class="ba-form">
+          <label>Bogholderens email
+            <input type="email" id="bogholderEmail" placeholder="bogholder@..." autocomplete="off" />
+          </label>
+          <button type="button" id="gemBogholderBtn">Gem bogholder-email</button>
+        </div>
+      </div>
+
+      <div class="ba-table-wrap">
+        <table class="ba">
+          <thead>
+            <tr>
+              <th>Email</th>
+              <th>Rolle</th>
+              <th class="actions">Handlinger</th>
+            </tr>
+          </thead>
+          <tbody id="brugerBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="err" class="ba-error" style="display:none;"></div>
+  </main>
+
+  <script src="auth-nav.js"></script>
+  <script>
+    const apiBase =
+      window.location.origin && window.location.origin !== 'null'
+        ? window.location.origin
+        : 'http://localhost:3000';
+    const TOKEN_KEY = 'frilandAuthToken';
+    const cred = { credentials: 'include' };
+
+    const loginSektion = document.getElementById('loginSektion');
+    const deniedSektion = document.getElementById('deniedSektion');
+    const adminIndhold = document.getElementById('adminIndhold');
+    const errBox = document.getElementById('err');
+    const brugerBody = document.getElementById('brugerBody');
+
+    function authHeaders() {
+      const t = sessionStorage.getItem(TOKEN_KEY);
+      const h = { 'Content-Type': 'application/json' };
+      if (t) h.Authorization = 'Bearer ' + t;
+      return h;
+    }
+
+    function showErr(msg) {
+      errBox.textContent = msg || '';
+      errBox.style.display = msg ? 'block' : 'none';
+    }
+
+    async function hentMe() {
+      const r = await fetch(apiBase + '/api/auth/me', { ...cred, headers: authHeaders() });
+      return r.json();
+    }
+
+    function visTilstand(me) {
+      loginSektion.style.display = 'none';
+      deniedSektion.style.display = 'none';
+      adminIndhold.style.display = 'none';
+      showErr('');
+      if (!me.loggedIn) {
+        loginSektion.style.display = 'block';
+        return;
+      }
+      if (!me.admin) {
+        deniedSektion.style.display = 'block';
+        return;
+      }
+      adminIndhold.style.display = 'block';
+    }
+
+    async function hentIndstillinger() {
+      const r = await fetch(apiBase + '/api/settings', { ...cred, headers: authHeaders() });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error || 'Kunne ikke hente indstillinger');
+      document.getElementById('bogholderEmail').value = d.bookkeeperEmail || '';
+    }
+
+    document.getElementById('gemBogholderBtn').addEventListener('click', async () => {
+      showErr('');
+      try {
+        const bookkeeperEmail = document.getElementById('bogholderEmail').value.trim();
+        const r = await fetch(apiBase + '/api/settings', {
+          ...cred,
+          method: 'PUT',
+          headers: authHeaders(),
+          body: JSON.stringify({ bookkeeperEmail }),
+        });
+        const d = await r.json();
+        if (!r.ok) throw new Error(d.error || 'Kunne ikke gemme');
+        document.getElementById('bogholderEmail').value = d.bookkeeperEmail || '';
+      } catch (e) {
+        showErr(e.message || String(e));
+      }
+    });
+
+    async function hentBrugere() {
+      const r = await fetch(apiBase + '/api/users', { ...cred, headers: authHeaders() });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error || 'Kunne ikke hente brugere');
+      brugerBody.innerHTML = '';
+      for (const u of d.users || []) {
+        const tr = document.createElement('tr');
+        const roleLabel =
+          u.role === 'admin' ? 'Administrator' : u.role === 'bogholder' ? 'Bogholder' : 'Bruger';
+        tr.innerHTML =
+          '<td>' +
+          escapeHtml(u.email) +
+          '</td><td>' +
+          roleLabel +
+          '</td><td class="actions"></td>';
+        const tdAct = tr.querySelector('.actions');
+        const targets = ['admin', 'bogholder', 'user'].filter((r) => r !== u.role);
+        for (const role of targets) {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.textContent =
+            role === 'admin' ? 'Gør til admin' : role === 'bogholder' ? 'Gør til bogholder' : 'Gør til bruger';
+          btn.addEventListener('click', () => skiftRolle(u.email, role));
+          tdAct.appendChild(btn);
+        }
+        const btnSlet = document.createElement('button');
+        btnSlet.type = 'button';
+        btnSlet.className = 'danger';
+        btnSlet.textContent = 'Slet';
+        btnSlet.addEventListener('click', () => sletBruger(u.email));
+        tdAct.appendChild(btnSlet);
+        brugerBody.appendChild(tr);
+      }
+    }
+
+    function escapeHtml(s) {
+      return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    async function skiftRolle(email, role) {
+      showErr('');
+      try {
+        const r = await fetch(apiBase + '/api/users', {
+          ...cred,
+          method: 'PUT',
+          headers: authHeaders(),
+          body: JSON.stringify({ email, role }),
+        });
+        const d = await r.json();
+        if (!r.ok) throw new Error(d.error || 'Fejl');
+        await hentBrugere();
+      } catch (e) {
+        showErr(e.message || String(e));
+      }
+    }
+
+    async function sletBruger(email) {
+      if (!confirm('Slette ' + email + '?')) return;
+      showErr('');
+      try {
+        const r = await fetch(apiBase + '/api/users', {
+          ...cred,
+          method: 'DELETE',
+          headers: authHeaders(),
+          body: JSON.stringify({ email }),
+        });
+        const d = await r.json();
+        if (!r.ok) throw new Error(d.error || 'Fejl');
+        await hentBrugere();
+      } catch (e) {
+        showErr(e.message || String(e));
+      }
+    }
+
+    document.getElementById('loginBtn').addEventListener('click', async () => {
+      showErr('');
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginKode').value;
+      try {
+        const r = await fetch(apiBase + '/api/auth/login', {
+          ...cred,
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+        const d = await r.json();
+        if (!r.ok) throw new Error(d.error || 'Login fejlede');
+        sessionStorage.setItem(TOKEN_KEY, d.token);
+        const me = await hentMe();
+        visTilstand(me);
+        if (me.admin) {
+          await hentIndstillinger().catch(() => {});
+          await hentBrugere();
+        }
+      } catch (e) {
+        showErr(e.message || String(e));
+      }
+    });
+
+    document.getElementById('opretBtn').addEventListener('click', async () => {
+      showErr('');
+      const email = document.getElementById('nyEmail').value.trim();
+      const password = document.getElementById('nyKode').value;
+      const role = document.getElementById('nyRolle').value;
+      try {
+        const r = await fetch(apiBase + '/api/users', {
+          ...cred,
+          method: 'POST',
+          headers: authHeaders(),
+          body: JSON.stringify({ email, password, role }),
+        });
+        const d = await r.json();
+        if (!r.ok) throw new Error(d.error || 'Kunne ikke oprette');
+        document.getElementById('nyEmail').value = '';
+        document.getElementById('nyKode').value = '';
+        await hentBrugere();
+      } catch (e) {
+        showErr(e.message || String(e));
+      }
+    });
+
+    (async function init() {
+      const me = await hentMe();
+      visTilstand(me);
+      if (me.loggedIn && me.admin) {
+        await hentIndstillinger().catch(() => {});
+        await hentBrugere();
+      }
+    })();
+  </script>
+</body>
+</html>

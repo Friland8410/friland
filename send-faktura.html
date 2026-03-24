@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Send faktura – Friland</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    .bh-grid { display: grid; gap: 1rem; grid-template-columns: 1fr; margin: 1.5rem 0; }
+    @media (min-width: 720px) { .bh-grid { grid-template-columns: repeat(3, 1fr); } }
+    .bh-valg {
+      border: 2px solid var(--border); border-radius: 10px; padding: 1.1rem; background: var(--bg-card);
+      cursor: pointer; text-align: left; font: inherit; transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .bh-valg:hover { border-color: var(--accent-muted); }
+    .bh-valg[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(45, 90, 74, 0.2); }
+    .bh-valg h2 { margin: 0 0 0.35rem 0; font-size: 1.05rem; color: var(--accent); }
+    .bh-valg p { margin: 0; font-size: 0.875rem; color: var(--text-secondary); line-height: 1.45; }
+    .bh-panel { display: none; margin: 1.5rem 0; padding: 1.25rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; max-width: 36rem; }
+    .bh-panel.aktiv { display: block; }
+    .bh-form label { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 0.85rem; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); }
+    .bh-form input, .bh-form textarea { padding: 0.5rem 0.65rem; border-radius: 6px; border: 1px solid var(--border); font: inherit; }
+    .bh-linje { display: grid; grid-template-columns: 1fr 7rem; gap: 0.5rem; margin-bottom: 0.5rem; align-items: end; }
+    @media (max-width: 500px) { .bh-linje { grid-template-columns: 1fr; } }
+    .bh-btn { padding: 0.6rem 1.2rem; border-radius: 6px; border: none; font-weight: 600; cursor: pointer; font-family: inherit; background: var(--accent); color: white; }
+    .bh-btn:hover { background: var(--accent-light); }
+    .bh-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .bh-btn-sek { background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border); }
+    .bh-advarsel { padding: 0.85rem 1rem; background: #fff8e6; border: 1px solid #e6c200; border-radius: 8px; font-size: 0.9rem; margin: 1rem 0; color: #5c4a00; }
+    .bh-ok { padding: 0.85rem 1rem; background: #e8f5ef; border: 1px solid var(--accent-muted); border-radius: 8px; font-size: 0.9rem; margin: 1rem 0; color: var(--text-primary); }
+    .bh-fejl { padding: 1rem; background: #fde8e8; color: #8b1a1a; border-radius: 8px; margin: 1rem 0; }
+    .bh-hint { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; margin: 0.5rem 0 0 0; }
+    .bh-eksempel { font-size: 0.85rem; margin-top: 0.75rem; }
+    .bh-eksempel a { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <nav class="topmenu">
+    <a href="oversigt.html">Oversigt</a>
+    <a href="send-faktura.html" class="active">Send faktura</a>
+    <a href="forbrug-indtastet.html">Forbrug</a>
+    <a href="kontingent.html">Kontingent</a>
+    <a href="brugeradmin.html" id="navBrugeradmin" style="display:none;">Brugeradmin</a>
+    <div class="topmenu-dropdown">
+      <button type="button" class="topmenu-dropdown-toggle" aria-expanded="false" aria-haspopup="true">Fra Economic</button>
+      <div class="topmenu-dropdown-panel" role="menu">
+        <a href="index.html" role="menuitem">Årsregnskab</a>
+        <a href="saldobalance-supabase.html" role="menuitem">Saldobalancer</a>
+        <a href="kontoplan.html" role="menuitem">Kontoplan</a>
+        <a href="forbrug.html" role="menuitem">Forbrug fra Economic</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="page-header">
+    <h1>Send faktura</h1>
+    <p class="subtitle">Foto, fil eller udfyldt faktura — sendes på mail til foreningens bogholder</p>
+  </header>
+
+  <main class="content">
+    <p class="bh-hint" style="max-width:40rem;">
+      Vælg <strong>én</strong> metode nedenfor, udfyld dine kontaktoplysninger og tryk <strong>Send faktura</strong>.
+      Layout for punkt 3 svarer til GF-faktura-eksemplet (dato, adresse, linjer, I alt).
+    </p>
+    <p class="bh-eksempel"><a href="gf-faktura-eksempel.pdf" download>Download eksempel-PDF (GF faktura)</a></p>
+
+    <div id="cfgAdvarsel" class="bh-advarsel" style="display:none;">
+      Bogholder-email er ikke sat endnu. En <strong>administrator</strong> skal logge ind på <a href="brugeradmin.html">Brugeradmin</a> og gemme bogholderens adresse, før der kan sendes mail.
+    </div>
+    <div id="sendtOk" class="bh-ok" style="display:none;"></div>
+    <div id="sendtFejl" class="bh-fejl" style="display:none;"></div>
+
+    <div class="bh-grid" role="group" aria-label="Vælg metode">
+      <button type="button" class="bh-valg" id="vFoto" aria-pressed="false">
+        <h2>1 · Tag et foto</h2>
+        <p>Bedst på mobil: åbner kameraet så du kan fotografere kvittering eller bilag.</p>
+      </button>
+      <button type="button" class="bh-valg" id="vUpload" aria-pressed="false">
+        <h2>2 · Upload dokument</h2>
+        <p>Vælg PDF eller billede fra din enhed.</p>
+      </button>
+      <button type="button" class="bh-valg" id="vForm" aria-pressed="true">
+        <h2>3 · Udfyld faktura</h2>
+        <p>Indtast felter som på GF-fakturaen — der genereres en PDF i samme stil og vedlægges mailen til bogholderen.</p>
+      </button>
+    </div>
+
+    <div id="panelFoto" class="bh-panel">
+      <p class="bh-hint">På mange telefoner åbnes kameraet automatisk. På computer vælger du et billedfil.</p>
+      <label>Foto / billede
+        <input type="file" id="inpFoto" accept="image/*" capture="environment" />
+      </label>
+    </div>
+
+    <div id="panelUpload" class="bh-panel">
+      <label>Dokument
+        <input type="file" id="inpUpload" accept=".pdf,image/*,.png,.jpg,.jpeg,.webp" />
+      </label>
+    </div>
+
+    <div id="panelForm" class="bh-panel aktiv">
+      <div class="bh-form">
+        <label>Dato
+          <input type="date" id="fDato" />
+        </label>
+        <label>Navn (på fakturaen)
+          <input type="text" id="fNavn" placeholder="Fx Nikolaj Hygebjerg" />
+        </label>
+        <label>Adresse
+          <input type="text" id="fAdr" placeholder="Fx Friland 36" />
+        </label>
+        <label>Postnr
+          <input type="text" id="fPostnr" placeholder="8410" />
+        </label>
+        <label>By
+          <input type="text" id="fBy" placeholder="Rønde" />
+        </label>
+        <label>Fakturaoverskrift
+          <input type="text" id="fTitel" placeholder="Fx Faktura GF 2026" />
+        </label>
+        <div>
+          <strong style="font-size:0.85rem; color:var(--text-secondary);">Linjer (tekst + beløb kr)</strong>
+          <div id="fLinjer"></div>
+          <button type="button" class="bh-btn bh-btn-sek" id="tilfoejLinje" style="margin-top:0.5rem;">+ Linje</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="bh-panel aktiv" style="max-width:36rem; margin-top:2rem;">
+      <h2 style="margin:0 0 1rem 0; font-size:1.1rem;">Dine oplysninger (påkrævet)</h2>
+      <div class="bh-form">
+        <label>Dit navn
+          <input type="text" id="kNavn" autocomplete="name" required />
+        </label>
+        <label>Din email
+          <input type="email" id="kEmail" autocomplete="email" required />
+        </label>
+        <label>Bemærkning (valgfri)
+          <textarea id="kBem" rows="2" placeholder="Fx hvilket arrangement det vedrører"></textarea>
+        </label>
+      </div>
+      <button type="button" class="bh-btn" id="btnSend">Send faktura</button>
+      <p class="bh-hint" id="smtpHint" style="display:none;">Uden SMTP i serverens .env logges mailen kun i serverkonsollen (simulation).</p>
+    </div>
+  </main>
+
+  <script src="auth-nav.js"></script>
+  <script>
+    const apiBase =
+      window.location.origin && window.location.origin !== 'null'
+        ? window.location.origin
+        : 'http://localhost:3000';
+    const cred = { credentials: 'include' };
+
+    let mode = 'form';
+    const vFoto = document.getElementById('vFoto');
+    const vUpload = document.getElementById('vUpload');
+    const vForm = document.getElementById('vForm');
+    const panelFoto = document.getElementById('panelFoto');
+    const panelUpload = document.getElementById('panelUpload');
+    const panelForm = document.getElementById('panelForm');
+    const inpFoto = document.getElementById('inpFoto');
+    const inpUpload = document.getElementById('inpUpload');
+    const fLinjer = document.getElementById('fLinjer');
+    const cfgAdvarsel = document.getElementById('cfgAdvarsel');
+    const sendtOk = document.getElementById('sendtOk');
+    const sendtFejl = document.getElementById('sendtFejl');
+    const btnSend = document.getElementById('btnSend');
+
+    function setMode(m) {
+      mode = m;
+      [vFoto, vUpload, vForm].forEach((b) => b.setAttribute('aria-pressed', 'false'));
+      panelFoto.classList.remove('aktiv');
+      panelUpload.classList.remove('aktiv');
+      panelForm.classList.remove('aktiv');
+      if (m === 'foto') {
+        vFoto.setAttribute('aria-pressed', 'true');
+        panelFoto.classList.add('aktiv');
+      } else if (m === 'upload') {
+        vUpload.setAttribute('aria-pressed', 'true');
+        panelUpload.classList.add('aktiv');
+      } else {
+        vForm.setAttribute('aria-pressed', 'true');
+        panelForm.classList.add('aktiv');
+      }
+    }
+
+    vFoto.addEventListener('click', () => setMode('foto'));
+    vUpload.addEventListener('click', () => setMode('upload'));
+    vForm.addEventListener('click', () => setMode('form'));
+
+    function addLinje(tekst, pris) {
+      const wrap = document.createElement('div');
+      wrap.className = 'bh-linje';
+      wrap.innerHTML =
+        '<label style="margin:0;">Tekst<input type="text" class="l-tekst" value="' +
+        (tekst || '').replace(/"/g, '&quot;') +
+        '" placeholder="Fx Børnepasning" /></label>' +
+        '<label style="margin:0;">Beløb (kr)<input type="text" class="l-pris" value="' +
+        (pris != null ? pris : '') +
+        '" placeholder="1700" inputmode="decimal" /></label>';
+      fLinjer.appendChild(wrap);
+    }
+
+    document.getElementById('tilfoejLinje').addEventListener('click', () => addLinje('', ''));
+    addLinje('Børnepasning', '1700');
+    addLinje('Print', '100');
+
+    const idag = new Date();
+    document.getElementById('fDato').value =
+      idag.getFullYear() + '-' + String(idag.getMonth() + 1).padStart(2, '0') + '-' + String(idag.getDate()).padStart(2, '0');
+
+    async function tjekCfg() {
+      const r = await fetch(apiBase + '/api/settings/public', cred);
+      const d = await r.json();
+      cfgAdvarsel.style.display = d.bogholderKonfigureret ? 'none' : 'block';
+      btnSend.disabled = !d.bogholderKonfigureret;
+    }
+
+    function skjulBeskeder() {
+      sendtOk.style.display = 'none';
+      sendtFejl.style.display = 'none';
+    }
+
+    function hentLinjer() {
+      const out = [];
+      fLinjer.querySelectorAll('.bh-linje').forEach((row) => {
+        const tekst = row.querySelector('.l-tekst')?.value?.trim() ?? '';
+        const pris = row.querySelector('.l-pris')?.value?.trim() ?? '';
+        if (tekst || pris) out.push({ tekst, pris });
+      });
+      return out;
+    }
+
+    btnSend.addEventListener('click', async () => {
+      skjulBeskeder();
+      const kontaktNavn = document.getElementById('kNavn').value.trim();
+      const kontaktEmail = document.getElementById('kEmail').value.trim();
+      const bemærkning = document.getElementById('kBem').value.trim();
+      if (!kontaktNavn || !kontaktEmail) {
+        sendtFejl.textContent = 'Udfyld navn og email.';
+        sendtFejl.style.display = 'block';
+        return;
+      }
+
+      const fd = new FormData();
+      fd.append('mode', mode);
+      fd.append('kontaktNavn', kontaktNavn);
+      fd.append('kontaktEmail', kontaktEmail);
+      if (bemærkning) fd.append('bemærkning', bemærkning);
+
+      if (mode === 'foto') {
+        const f = inpFoto.files?.[0];
+        if (!f) {
+          sendtFejl.textContent = 'Vælg eller tag et foto først.';
+          sendtFejl.style.display = 'block';
+          return;
+        }
+        fd.append('fil', f, f.name || 'foto.jpg');
+      } else if (mode === 'upload') {
+        const f = inpUpload.files?.[0];
+        if (!f) {
+          sendtFejl.textContent = 'Vælg en fil først.';
+          sendtFejl.style.display = 'block';
+          return;
+        }
+        fd.append('fil', f, f.name || 'bilag');
+      } else {
+        fd.append('fakturaDato', document.getElementById('fDato').value);
+        fd.append('fakturaNavn', document.getElementById('fNavn').value.trim());
+        fd.append('fakturaAdresse', document.getElementById('fAdr').value.trim());
+        fd.append('fakturaPostnr', document.getElementById('fPostnr').value.trim());
+        fd.append('fakturaBy', document.getElementById('fBy').value.trim());
+        fd.append('fakturaTitel', document.getElementById('fTitel').value.trim());
+        fd.append('linjerJson', JSON.stringify(hentLinjer()));
+      }
+
+      btnSend.disabled = true;
+      try {
+        const r = await fetch(apiBase + '/api/bogholder-afsendelse', { ...cred, method: 'POST', body: fd });
+        const d = await r.json().catch(() => ({}));
+        if (!r.ok) throw new Error(d.error || 'Send fejlede');
+        sendtOk.style.display = 'block';
+        sendtOk.textContent = d.simulated
+          ? 'Beskeden er logget på serveren (SMTP er ikke sat op — se .env). Bogholderen modtager ikke mail før SMTP er konfigureret.'
+          : 'Faktura sendt. Tak!';
+        if (d.simulated) document.getElementById('smtpHint').style.display = 'block';
+      } catch (e) {
+        sendtFejl.textContent = e.message || String(e);
+        sendtFejl.style.display = 'block';
+      } finally {
+        btnSend.disabled = false;
+        await tjekCfg();
+      }
+    });
+
+    tjekCfg();
+  </script>
+</body>
+</html>

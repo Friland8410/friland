@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kontingent – Friland</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    .kt-wrap { max-width: 100%; margin: 0 auto; }
+    .kt-toolbar { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; margin-bottom: 1rem; padding: 0.85rem 1rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; }
+    .kt-toolbar button { padding: 0.5rem 1rem; border-radius: 6px; border: none; font-weight: 600; cursor: pointer; font-family: inherit; background: var(--accent); color: white; }
+    .kt-toolbar button:hover { background: var(--accent-light); }
+    .kt-toolbar .kt-btn-sek { background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border); }
+    .kt-hint { font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.5; max-width: 48rem; }
+    .kt-err { padding: 1rem; background: #fde8e8; color: #8b1a1a; border-radius: 8px; margin: 1rem 0; display: none; }
+    .kt-table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-card); -webkit-overflow-scrolling: touch; }
+    table.kt { width: 100%; border-collapse: collapse; font-size: 0.82rem; min-width: 56rem; }
+    table.kt th, table.kt td { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+    table.kt th { background: var(--bg-secondary); font-weight: 600; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.03em; color: var(--text-secondary); white-space: nowrap; }
+    table.kt td.kt-lod { background: #ececec; font-weight: 600; min-width: 6.5rem; }
+    table.kt tr.kt-row-a td:not(.kt-lod):not(.kt-år) { background: #f7f7f7; }
+    table.kt tr.kt-row-b td:not(.kt-lod):not(.kt-år) { background: #fff; }
+    table.kt td.kt-år { text-align: center; vertical-align: middle; padding: 0.35rem; }
+    table.kt input.kt-inp { width: 100%; min-width: 0; max-width: 14rem; padding: 0.3rem 0.4rem; border: 1px solid var(--border); border-radius: 4px; font: inherit; font-size: 0.82rem; }
+    table.kt input.kt-inp-tel { max-width: 8rem; }
+    table.kt .kt-navn-celle .kt-notat-hint { display: block; font-size: 0.72rem; color: var(--text-secondary); margin-top: 0.2rem; }
+    table.kt .kt-lod-btns { margin-top: 0.45rem; display: flex; flex-wrap: wrap; gap: 0.35rem; }
+    table.kt .kt-lod-btns button { padding: 0.2rem 0.45rem; font-size: 0.72rem; border-radius: 4px; border: 1px solid var(--border); background: var(--bg-card); cursor: pointer; font-family: inherit; }
+    table.kt .kt-lod-btns button.kt-del-lod { border-color: #c44; color: #8b1a1a; }
+    table.kt .kt-slet-person { padding: 0.2rem 0.4rem; font-size: 0.72rem; border-radius: 4px; border: 1px solid var(--border); background: var(--bg-secondary); cursor: pointer; font-family: inherit; margin-top: 0.25rem; }
+    .kt-status { display: inline-flex; align-items: center; justify-content: center; min-width: 2.1rem; min-height: 1.85rem; padding: 0.15rem 0.35rem; border-radius: 6px; font-weight: 700; font-size: 1rem; line-height: 1; border: none; font-family: inherit; }
+    .kt-status.kt-ubetalt { background: #ffebee; color: #b71c1c; }
+    .kt-status.kt-betalt { background: #e8f5e9; color: #1b5e20; }
+    button.kt-status { cursor: pointer; }
+    button.kt-status.kt-ubetalt:hover { filter: brightness(0.97); }
+    button.kt-status.kt-betalt:hover { filter: brightness(0.97); }
+    span.kt-status { cursor: default; }
+    table.kt tr.kt-lejer-row td:not(.kt-lod):not(.kt-år) { background: #fff9c4 !important; }
+  </style>
+</head>
+<body>
+  <nav class="topmenu">
+    <a href="oversigt.html">Oversigt</a>
+    <a href="send-faktura.html">Send faktura</a>
+    <a href="forbrug-indtastet.html">Forbrug</a>
+    <a href="kontingent.html" class="active">Kontingent</a>
+    <a href="brugeradmin.html" id="navBrugeradmin" style="display:none;">Brugeradmin</a>
+    <div class="topmenu-dropdown">
+      <button type="button" class="topmenu-dropdown-toggle" aria-expanded="false" aria-haspopup="true">Fra Economic</button>
+      <div class="topmenu-dropdown-panel" role="menu">
+        <a href="index.html" role="menuitem">Årsregnskab</a>
+        <a href="saldobalance-supabase.html" role="menuitem">Saldobalancer</a>
+        <a href="kontoplan.html" role="menuitem">Kontoplan</a>
+        <a href="forbrug.html" role="menuitem">Forbrug fra Economic</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="page-header">
+    <h1>Kontingent</h1>
+    <p class="subtitle">Medlemmer pr. lod og betalt kontingent pr. år</p>
+  </header>
+
+  <main class="content">
+    <div class="kt-wrap" id="ktWrap">
+      <p class="kt-hint" id="ktHint"></p>
+      <div id="ktErr" class="kt-err"></div>
+      <div class="kt-toolbar" id="ktToolbar" style="display:none;">
+        <button type="button" id="ktGem">Gem ændringer</button>
+        <button type="button" class="kt-btn-sek" id="ktNytLod">+ Nyt lod</button>
+      </div>
+      <div id="ktRoot"></div>
+    </div>
+  </main>
+
+  <script src="auth-nav.js"></script>
+  <script>
+    const apiBase =
+      window.location.origin && window.location.origin !== 'null'
+        ? window.location.origin
+        : 'http://localhost:3000';
+    const cred = { credentials: 'include' };
+
+    let data = null;
+    let years = [];
+    let canEdit = false;
+
+    function rid() {
+      return 'k' + (crypto.randomUUID ? crypto.randomUUID().replace(/-/g, '').slice(0, 12) : String(Date.now()));
+    }
+
+    function esc(s) {
+      return String(s ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function findPerson(lodId, personId) {
+      const lod = data.lods.find((l) => l.id === lodId);
+      if (!lod) return null;
+      const p = lod.personer.find((x) => x.id === personId);
+      return p ? { lod, person: p } : null;
+    }
+
+    function syncTextFromDom() {
+      if (!canEdit || !data) return;
+      document.querySelectorAll('[data-kt-lod][data-kt-person]').forEach((el) => {
+        const lid = el.getAttribute('data-kt-lod');
+        const pid = el.getAttribute('data-kt-person');
+        const field = el.getAttribute('data-kt-field');
+        const found = findPerson(lid, pid);
+        if (!found) return;
+        if (field === 'label') {
+          const lod = data.lods.find((l) => l.id === lid);
+          if (lod) lod.label = el.value;
+        } else if (field === 'navn') found.person.navn = el.value;
+        else if (field === 'email') found.person.email = el.value;
+        else if (field === 'telefon') found.person.telefon = el.value;
+        else if (field === 'notat') found.person.notat = el.value;
+      });
+    }
+
+    async function saveToServer() {
+      const res = await fetch(apiBase + '/api/kontingent', {
+        ...cred,
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      const d = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(d.error || 'Kunne ikke gemme');
+      years = d.years || years;
+      const next = { ...d };
+      delete next.years;
+      data = next;
+    }
+
+    function render() {
+      const root = document.getElementById('ktRoot');
+      const hint = document.getElementById('ktHint');
+      const toolbar = document.getElementById('ktToolbar');
+      if (!data || !years.length) {
+        root.innerHTML = '';
+        return;
+      }
+      hint.textContent = canEdit
+        ? 'Ret felter og klik «Gem ændringer». Klik på år-cellen for at skifte mellem betalt (grøn ✓) og ikke betalt (rød −). Tilføj personer under hvert lod efter behov.'
+        : 'Oversigt over kontingent. Kun administrator og bogholder kan rette.';
+      toolbar.style.display = canEdit ? 'flex' : 'none';
+
+      const ncol = 4 + years.length + (canEdit ? 1 : 0);
+      let html = '<div class="kt-table-wrap"><table class="kt"><thead><tr>';
+      html += '<th>Lod</th><th>Navn</th><th>E-mail</th><th>Telefon</th>';
+      for (const y of years) html += '<th class="kt-år">' + esc(y) + '</th>';
+      if (canEdit) html += '<th></th>';
+      html += '</tr></thead><tbody>';
+
+      let stripe = 0;
+      for (const lod of data.lods) {
+        const n = lod.personer.length;
+        const rs = n > 0 ? n : 1;
+        lod.personer.forEach((person, pi) => {
+          const rowClass = stripe % 2 === 0 ? 'kt-row-a' : 'kt-row-b';
+          const lejer =
+            !canEdit && person.notat && /lejer/i.test(person.notat) ? ' kt-lejer-row' : '';
+          html += '<tr class="' + rowClass + lejer + '">';
+          if (pi === 0) {
+            html += '<td class="kt-lod" rowspan="' + rs + '">';
+            if (canEdit) {
+              html +=
+                '<input type="text" class="kt-inp" data-kt-lod="' +
+                esc(lod.id) +
+                '" data-kt-person="' +
+                esc(person.id) +
+                '" data-kt-field="label" value="' +
+                esc(lod.label) +
+                '" title="Lodbetegnelse" />';
+              html +=
+                '<div class="kt-lod-btns"><button type="button" class="kt-add-person" data-lod-id="' +
+                esc(lod.id) +
+                '">+ Person</button>';
+              html +=
+                '<button type="button" class="kt-del-lod" data-lod-id="' +
+                esc(lod.id) +
+                '">Slet lod</button></div>';
+            } else {
+              html += esc(lod.label);
+            }
+            html += '</td>';
+          }
+          html += '<td class="kt-navn-celle">';
+          if (canEdit) {
+            html +=
+              '<input type="text" class="kt-inp" placeholder="Navn" data-kt-lod="' +
+              esc(lod.id) +
+              '" data-kt-person="' +
+              esc(person.id) +
+              '" data-kt-field="navn" value="' +
+              esc(person.navn) +
+              '" />';
+            html +=
+              '<input type="text" class="kt-inp" style="margin-top:0.35rem;max-width:12rem;" placeholder="Notat fx (lejer)" data-kt-lod="' +
+              esc(lod.id) +
+              '" data-kt-person="' +
+              esc(person.id) +
+              '" data-kt-field="notat" value="' +
+              esc(person.notat) +
+              '" />';
+          } else {
+            html += esc(person.navn) || '–';
+            if (person.notat) html += '<span class="kt-notat-hint">' + esc(person.notat) + '</span>';
+          }
+          html += '</td><td>';
+          if (canEdit) {
+            html +=
+              '<input type="email" class="kt-inp" data-kt-lod="' +
+              esc(lod.id) +
+              '" data-kt-person="' +
+              esc(person.id) +
+              '" data-kt-field="email" value="' +
+              esc(person.email) +
+              '" />';
+          } else {
+            html += person.email ? '<a href="mailto:' + esc(person.email) + '">' + esc(person.email) + '</a>' : '–';
+          }
+          html += '</td><td>';
+          if (canEdit) {
+            html +=
+              '<input type="text" class="kt-inp kt-inp-tel" inputmode="numeric" data-kt-lod="' +
+              esc(lod.id) +
+              '" data-kt-person="' +
+              esc(person.id) +
+              '" data-kt-field="telefon" value="' +
+              esc(person.telefon) +
+              '" />';
+          } else {
+            html += esc(person.telefon) || '–';
+          }
+          html += '</td>';
+          for (const y of years) {
+            const paid = person.betalt && person.betalt[y];
+            const cls = paid ? 'kt-betalt' : 'kt-ubetalt';
+            const sym = paid ? '✓' : '−';
+            html += '<td class="kt-år">';
+            if (canEdit) {
+              html +=
+                '<button type="button" class="kt-status ' +
+                cls +
+                '" data-toggle-year="' +
+                esc(y) +
+                '" data-lod-id="' +
+                esc(lod.id) +
+                '" data-person-id="' +
+                esc(person.id) +
+                '" title="Skift betalt / ikke betalt">' +
+                sym +
+                '</button>';
+            } else {
+              html += '<span class="kt-status ' + cls + '" title="' + (paid ? 'Betalt' : 'Ikke betalt') + '">' + sym + '</span>';
+            }
+            html += '</td>';
+          }
+          if (canEdit) {
+            html +=
+              '<td><button type="button" class="kt-slet-person" data-lod-id="' +
+              esc(lod.id) +
+              '" data-person-id="' +
+              esc(person.id) +
+              '">Slet person</button></td>';
+          }
+          html += '</tr>';
+        });
+        stripe++;
+      }
+      html += '</tbody></table></div>';
+      root.innerHTML = html;
+    }
+
+    document.getElementById('ktWrap').addEventListener('click', async function (ev) {
+      if (!canEdit || !data) return;
+      const t = ev.target;
+      if (t.classList.contains('kt-status') && t.hasAttribute('data-toggle-year')) {
+        ev.preventDefault();
+        const y = t.getAttribute('data-toggle-year');
+        const lid = t.getAttribute('data-lod-id');
+        const pid = t.getAttribute('data-person-id');
+        syncTextFromDom();
+        const found = findPerson(lid, pid);
+        if (!found || !found.person.betalt) return;
+        found.person.betalt[y] = !found.person.betalt[y];
+        document.getElementById('ktErr').style.display = 'none';
+        try {
+          await saveToServer();
+          render();
+        } catch (e) {
+          document.getElementById('ktErr').textContent = e.message || String(e);
+          document.getElementById('ktErr').style.display = 'block';
+        }
+        return;
+      }
+      if (t.classList.contains('kt-add-person')) {
+        const lid = t.getAttribute('data-lod-id');
+        syncTextFromDom();
+        const lod = data.lods.find((l) => l.id === lid);
+        if (!lod) return;
+        const b = {};
+        for (const y of years) b[y] = false;
+        lod.personer.push({ id: rid(), navn: '', email: '', telefon: '', notat: '', betalt: b });
+        try {
+          await saveToServer();
+          render();
+        } catch (e) {
+          document.getElementById('ktErr').textContent = e.message || String(e);
+          document.getElementById('ktErr').style.display = 'block';
+        }
+        return;
+      }
+      if (t.classList.contains('kt-del-lod')) {
+        const lid = t.getAttribute('data-lod-id');
+        if (!confirm('Slette hele ' + (data.lods.find((l) => l.id === lid)?.label || 'lod') + ' og alle personer?')) return;
+        syncTextFromDom();
+        data.lods = data.lods.filter((l) => l.id !== lid);
+        if (data.lods.length === 0) {
+          data.lods.push({
+            id: rid(),
+            label: 'Lod 1',
+            personer: [{ id: rid(), navn: '', email: '', telefon: '', notat: '', betalt: Object.fromEntries(years.map((y) => [y, false])) }],
+          });
+        }
+        try {
+          await saveToServer();
+          render();
+        } catch (e) {
+          document.getElementById('ktErr').textContent = e.message || String(e);
+          document.getElementById('ktErr').style.display = 'block';
+        }
+        return;
+      }
+      if (t.classList.contains('kt-slet-person')) {
+        const lid = t.getAttribute('data-lod-id');
+        const pid = t.getAttribute('data-person-id');
+        const lod = data.lods.find((l) => l.id === lid);
+        if (!lod) return;
+        if (lod.personer.length <= 1) {
+          alert('Lod skal have mindst én person — slet hele loddet i stedet eller tilføj en ny person først.');
+          return;
+        }
+        if (!confirm('Slette denne person fra loddet?')) return;
+        syncTextFromDom();
+        lod.personer = lod.personer.filter((p) => p.id !== pid);
+        try {
+          await saveToServer();
+          render();
+        } catch (e) {
+          document.getElementById('ktErr').textContent = e.message || String(e);
+          document.getElementById('ktErr').style.display = 'block';
+        }
+      }
+    });
+
+    document.getElementById('ktGem').addEventListener('click', async function () {
+      if (!canEdit || !data) return;
+      document.getElementById('ktErr').style.display = 'none';
+      syncTextFromDom();
+      try {
+        await saveToServer();
+        render();
+      } catch (e) {
+        document.getElementById('ktErr').textContent = e.message || String(e);
+        document.getElementById('ktErr').style.display = 'block';
+      }
+    });
+
+    document.getElementById('ktNytLod').addEventListener('click', async function () {
+      if (!canEdit || !data) return;
+      syncTextFromDom();
+      const b = {};
+      for (const y of years) b[y] = false;
+      data.lods.push({
+        id: rid(),
+        label: 'Nyt lod',
+        personer: [{ id: rid(), navn: '', email: '', telefon: '', notat: '', betalt: { ...b } }],
+      });
+      try {
+        await saveToServer();
+        render();
+      } catch (e) {
+        document.getElementById('ktErr').textContent = e.message || String(e);
+        document.getElementById('ktErr').style.display = 'block';
+      }
+    });
+
+    (async function init() {
+      try {
+        const [meRes, dataRes] = await Promise.all([
+          fetch(apiBase + '/api/auth/me', cred),
+          fetch(apiBase + '/api/kontingent', cred),
+        ]);
+        const me = await meRes.json();
+        const d = await dataRes.json();
+        if (!dataRes.ok) throw new Error(d.error || 'Kunne ikke hente data');
+        years = d.years || [];
+        delete d.years;
+        data = d;
+        canEdit = !!me.canEditOversigt;
+        render();
+      } catch (e) {
+        document.getElementById('ktErr').textContent = e.message || String(e);
+        document.getElementById('ktErr').style.display = 'block';
+        document.getElementById('ktHint').textContent = '';
+      }
+    })();
+  </script>
+</body>
+</html>

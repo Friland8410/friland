@@ -1,0 +1,49 @@
+{
+  "periode": "01.03.25 – 28.02.26",
+  "aar": "2025/26",
+  "indtaegter": [
+    { "navn": "Kontingent", "perioden": 439375, "aaretFoer": 320481.34 },
+    { "navn": "Grundskyld", "perioden": 117942, "aaretFoer": 102283.4 },
+    { "navn": "Renteindtægter bank", "perioden": 1360.65, "aaretFoer": 0 }
+  ],
+  "sumIndtaegter": 558677.65,
+  "udgifter": [
+    { "navn": "Administration", "perioden": 15391.38 },
+    { "navn": "Fonden Nødværge", "perioden": 717.75 },
+    { "navn": "Ansvarsforsikring", "perioden": 4571.4 },
+    { "navn": "Reno Djurs", "perioden": 18080.9 },
+    { "navn": "Generalforsamling", "perioden": 14585 },
+    { "navn": "Drift af ressourceplads", "perioden": 0 },
+    { "navn": "Vedligeholdelse af veje", "perioden": 800 },
+    { "navn": "Pleje af fællesarealer", "perioden": 18870.92 },
+    { "navn": "Medlemsskab af foreninger", "perioden": 4000 },
+    { "navn": "Frilandsaften rådighedsbeløb", "perioden": 1300 },
+    { "navn": "Økonomigruppens rådighedsbeløb", "perioden": 901.23 },
+    { "navn": "Tilskud til Festival 25", "perioden": 11731.32 },
+    { "navn": "Skilte", "perioden": 9654.16 },
+    { "navn": "Arbejdsdage", "perioden": 4921.5 },
+    { "navn": "Ravnebidrag", "perioden": 30000 },
+    { "navn": "Æbledag", "perioden": 957 },
+    { "navn": "Remise", "perioden": 19600 },
+    { "navn": "Sct. Hans fest", "perioden": 1917.05 },
+    { "navn": "Fællesspisning", "perioden": 32152.33 },
+    { "navn": "Spontane gaver", "perioden": 1722 },
+    { "navn": "Liv i Ravnen", "perioden": 4166.74 },
+    { "navn": "Solhvervsfest", "perioden": 9828.5 },
+    { "navn": "Syddjurs Kommune Rottebekæmpelse", "perioden": 2025.54 },
+    { "navn": "Projekter godkendt på GF (svævebane)", "perioden": 6169.8 },
+    { "navn": "Grundskyld opkrævning", "perioden": 185905 }
+  ],
+  "sumUdgifter": 399969.52,
+  "resultat": 158708.13,
+  "balance": [
+    { "navn": "Debitorer", "perioden": 29790 },
+    { "navn": "Konto kontingent og drift", "perioden": 357133.11 },
+    { "navn": "Foreningens opsparing - buffer", "perioden": 79510.59 },
+    { "navn": "Konto til skyldige poster", "perioden": 17724.97 },
+    { "navn": "Kooperativet Kundekort", "perioden": 0 },
+    { "navn": "Likvide værdier i alt", "perioden": 454368.67 },
+    { "navn": "Garantbevis Rønde Sparekasse", "perioden": 20000 },
+    { "navn": "Salgskonto (andel i grundejerforening)", "perioden": 1191480 }
+  ]
+}

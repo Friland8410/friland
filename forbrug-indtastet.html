@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forbrug – Friland</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    .fi-wrap { max-width: 52rem; margin: 0 auto; }
+    .fi-toolbar { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; margin-bottom: 1rem; padding: 0.85rem 1rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; }
+    .fi-toolbar button { padding: 0.5rem 1rem; border-radius: 6px; border: none; font-weight: 600; cursor: pointer; font-family: inherit; background: var(--accent); color: white; }
+    .fi-toolbar button:hover { background: var(--accent-light); }
+    .fi-toolbar .fi-btn-sek { background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border); }
+    .fi-hint { font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.5; }
+    .fi-err { padding: 1rem; background: #fde8e8; color: #8b1a1a; border-radius: 8px; margin: 1rem 0; display: none; }
+    .fi-period { width: 100%; max-width: 18rem; padding: 0.45rem 0.6rem; border-radius: 6px; border: 1px solid var(--border); font: inherit; font-weight: 700; }
+    .fi-table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-card); }
+    table.fi { width: 100%; border-collapse: collapse; font-size: 0.9rem; font-variant-numeric: tabular-nums; }
+    table.fi th, table.fi td { padding: 0.45rem 0.65rem; border-bottom: 1px solid var(--border); vertical-align: middle; text-align: left; }
+    table.fi th { font-weight: 700; background: var(--bg-secondary); }
+    table.fi th.fi-samlet, table.fi td.fi-samlet { text-align: right; background: #fff59d; font-weight: 700; }
+    table.fi th.fi-indtast, table.fi td.fi-indtast { background: var(--bg-card); min-width: 11rem; }
+    table.fi tr.fi-stripe-a td:first-child { background: #e8e8e8; }
+    table.fi tr.fi-stripe-b td:first-child { background: #f5f5f5; }
+    table.fi tr.fi-data td.fi-samlet { background: #fff59d; }
+    table.fi tr.fi-sep td { background: #c62828; height: 8px; padding: 0; border-color: #a01818; }
+    table.fi input.fi-label { width: 100%; max-width: 100%; padding: 0.3rem 0.45rem; border: 1px solid var(--border); border-radius: 4px; font: inherit; }
+    table.fi input.fi-delta { width: 6.5rem; padding: 0.3rem 0.45rem; border: 1px solid var(--border); border-radius: 4px; font: inherit; text-align: right; }
+    table.fi .fi-row-actions { white-space: nowrap; }
+    table.fi .fi-row-actions button { padding: 0.2rem 0.4rem; font-size: 0.72rem; margin-left: 0.25rem; border-radius: 4px; border: 1px solid var(--border); background: var(--bg-secondary); cursor: pointer; font-family: inherit; }
+    table.fi .fi-add-below { font-size: 0.8rem; margin-top: 0.5rem; }
+  </style>
+</head>
+<body>
+  <nav class="topmenu">
+    <a href="oversigt.html">Oversigt</a>
+    <a href="send-faktura.html">Send faktura</a>
+    <a href="forbrug-indtastet.html" class="active">Forbrug</a>
+    <a href="kontingent.html">Kontingent</a>
+    <a href="brugeradmin.html" id="navBrugeradmin" style="display:none;">Brugeradmin</a>
+    <div class="topmenu-dropdown">
+      <button type="button" class="topmenu-dropdown-toggle" aria-expanded="false" aria-haspopup="true">Fra Economic</button>
+      <div class="topmenu-dropdown-panel" role="menu">
+        <a href="index.html" role="menuitem">Årsregnskab</a>
+        <a href="saldobalance-supabase.html" role="menuitem">Saldobalancer</a>
+        <a href="kontoplan.html" role="menuitem">Kontoplan</a>
+        <a href="forbrug.html" role="menuitem">Forbrug fra Economic</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="page-header">
+    <h1>Forbrug</h1>
+    <p class="subtitle">Registrér tillæg til forbrug pr. linje — beløb i «Indtast» lægges til «Samlet forbrug»</p>
+  </header>
+
+  <main class="content">
+    <div class="fi-wrap" id="fiWrap">
+      <p class="fi-hint" id="fiHint"></p>
+      <div id="fiErr" class="fi-err"></div>
+      <div class="fi-toolbar" id="fiToolbar" style="display:none;">
+        <button type="button" id="fiGem">Gem ændringer</button>
+        <button type="button" class="fi-btn-sek" id="fiTilfoejLinje">+ Linje</button>
+        <button type="button" class="fi-btn-sek" id="fiTilfoejSep">+ Rød adskillelse</button>
+      </div>
+      <div id="fiRoot"></div>
+    </div>
+  </main>
+
+  <script src="auth-nav.js"></script>
+  <script>
+    const apiBase =
+      window.location.origin && window.location.origin !== 'null'
+        ? window.location.origin
+        : 'http://localhost:3000';
+    const cred = { credentials: 'include' };
+
+    let state = null;
+    let canEdit = false;
+
+    function rid() {
+      return 'f' + (crypto.randomUUID ? crypto.randomUUID().replace(/-/g, '').slice(0, 12) : String(Date.now()));
+    }
+
+    function formatKr2(n) {
+      return new Intl.NumberFormat('da-DK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(Number(n) || 0);
+    }
+
+    function parseKr(s) {
+      if (s == null || !String(s).trim()) return null;
+      let t = String(s).trim().replace(/\s/g, '');
+      t = t.replace(/\./g, '').replace(',', '.');
+      const n = parseFloat(t);
+      return Number.isFinite(n) ? n : null;
+    }
+
+    function esc(s) {
+      return String(s ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    async function saveToServer() {
+      const res = await fetch(apiBase + '/api/forbrug-indtastet', {
+        ...cred,
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(state),
+      });
+      const d = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(d.error || 'Kunne ikke gemme');
+      state = d;
+    }
+
+    function syncLabelsFromDom() {
+      if (!canEdit || !state) return;
+      const p = document.getElementById('fiPeriod');
+      if (p) state.periodLabel = p.value.trim() || state.periodLabel;
+      document.querySelectorAll('input.fi-label[data-row-id]').forEach((inp) => {
+        const id = inp.getAttribute('data-row-id');
+        const row = state.rows.find((r) => r.id === id);
+        if (row && row.type === 'data') row.label = inp.value;
+      });
+    }
+
+    function render() {
+      const root = document.getElementById('fiRoot');
+      const hint = document.getElementById('fiHint');
+      const toolbar = document.getElementById('fiToolbar');
+      if (!state) {
+        root.innerHTML = '';
+        return;
+      }
+      hint.textContent = canEdit
+        ? 'Indtast et beløb og klik «Læg til» — det adderes til samlet forbrug på linjen (fx 1000 og derefter -600 giver 400). Husk «Gem ændringer» efter at have rettet linjetekster.'
+        : 'Du ser de registrerede beløb. Kun administrator og bogholder kan indtaste.';
+      toolbar.style.display = canEdit ? 'flex' : 'none';
+
+      const cols = canEdit ? 4 : 2;
+      let html = '<div class="fi-table-wrap"><table class="fi"><thead><tr>';
+      html += '<th>';
+      if (canEdit) {
+        html +=
+          '<input type="text" class="fi-period" id="fiPeriod" value="' + esc(state.periodLabel) + '" title="Periode / årstal i overskriften" />';
+      } else {
+        html += esc(state.periodLabel);
+      }
+      html += '</th><th class="fi-samlet">Samlet forbrug</th>';
+      if (canEdit) html += '<th class="fi-indtast">Indtast</th><th></th>';
+      html += '</tr></thead><tbody>';
+
+      let dataRowIndex = 0;
+      for (const r of state.rows) {
+        if (r.type === 'separator') {
+          html += '<tr class="fi-sep"><td colspan="' + cols + '"></td></tr>';
+          continue;
+        }
+        const stripe = dataRowIndex % 2 === 0 ? 'fi-stripe-a' : 'fi-stripe-b';
+        dataRowIndex++;
+        html += '<tr class="fi-data ' + stripe + '">';
+        html +=
+          '<td>' +
+          (canEdit
+            ? '<input type="text" class="fi-label" data-row-id="' +
+              esc(r.id) +
+              '" value="' +
+              esc(r.label) +
+              '" />'
+            : esc(r.label)) +
+          '</td>';
+        html += '<td class="fi-samlet">' + formatKr2(r.samletForbrug) + '</td>';
+        if (canEdit) {
+          html +=
+            '<td class="fi-indtast"><input type="text" class="fi-delta" inputmode="decimal" placeholder="0" aria-label="Beløb der lægges til" data-delta-for="' +
+            esc(r.id) +
+            '" /> <button type="button" class="fi-tilfoej-beloeb" data-row-id="' +
+            esc(r.id) +
+            '">Læg til</button></td>';
+          html +=
+            '<td class="fi-row-actions"><button type="button" class="fi-del" data-row-id="' +
+            esc(r.id) +
+            '">Slet</button></td>';
+        }
+        html += '</tr>';
+      }
+      html += '</tbody></table></div>';
+      root.innerHTML = html;
+    }
+
+    document.getElementById('fiWrap').addEventListener('keydown', function (ev) {
+      if (ev.key !== 'Enter' || !ev.target.classList.contains('fi-delta')) return;
+      ev.preventDefault();
+      const tr = ev.target.closest('tr');
+      const btn = tr && tr.querySelector('.fi-tilfoej-beloeb');
+      if (btn) btn.click();
+    });
+
+    document.getElementById('fiWrap').addEventListener('click', async function (ev) {
+      if (!canEdit || !state) return;
+      const t = ev.target;
+      if (t.classList.contains('fi-tilfoej-beloeb')) {
+        const id = t.getAttribute('data-row-id');
+        const tr = t.closest('tr');
+        const el = tr ? tr.querySelector('input.fi-delta') : null;
+        if (!el || !id) return;
+        const delta = parseKr(el.value);
+        if (delta === null) {
+          document.getElementById('fiErr').textContent = 'Ugyldigt tal — brug fx 1000 eller -600,50';
+          document.getElementById('fiErr').style.display = 'block';
+          return;
+        }
+        document.getElementById('fiErr').style.display = 'none';
+        const row = state.rows.find((x) => x.id === id);
+        if (!row || row.type !== 'data') return;
+        row.samletForbrug = (Number(row.samletForbrug) || 0) + delta;
+        el.value = '';
+        try {
+          await saveToServer();
+          render();
+        } catch (e) {
+          document.getElementById('fiErr').textContent = e.message || String(e);
+          document.getElementById('fiErr').style.display = 'block';
+        }
+        return;
+      }
+      if (t.classList.contains('fi-del')) {
+        const id = t.getAttribute('data-row-id');
+        if (!id || !confirm('Slette denne linje?')) return;
+        syncLabelsFromDom();
+        state.rows = state.rows.filter((x) => x.id !== id);
+        try {
+          await saveToServer();
+          render();
+        } catch (e) {
+          document.getElementById('fiErr').textContent = e.message || String(e);
+          document.getElementById('fiErr').style.display = 'block';
+        }
+      }
+    });
+
+    document.getElementById('fiGem').addEventListener('click', async function () {
+      if (!canEdit || !state) return;
+      document.getElementById('fiErr').style.display = 'none';
+      syncLabelsFromDom();
+      try {
+        await saveToServer();
+        render();
+      } catch (e) {
+        document.getElementById('fiErr').textContent = e.message || String(e);
+        document.getElementById('fiErr').style.display = 'block';
+      }
+    });
+
+    document.getElementById('fiTilfoejLinje').addEventListener('click', async function () {
+      if (!canEdit || !state) return;
+      syncLabelsFromDom();
+      state.rows.push({ type: 'data', id: rid(), label: 'Ny linje', samletForbrug: 0 });
+      try {
+        await saveToServer();
+        render();
+      } catch (e) {
+        document.getElementById('fiErr').textContent = e.message || String(e);
+        document.getElementById('fiErr').style.display = 'block';
+      }
+    });
+
+    document.getElementById('fiTilfoejSep').addEventListener('click', async function () {
+      if (!canEdit || !state) return;
+      syncLabelsFromDom();
+      state.rows.push({ type: 'separator', id: rid() });
+      try {
+        await saveToServer();
+        render();
+      } catch (e) {
+        document.getElementById('fiErr').textContent = e.message || String(e);
+        document.getElementById('fiErr').style.display = 'block';
+      }
+    });
+
+    (async function init() {
+      try {
+        const [meRes, dataRes] = await Promise.all([
+          fetch(apiBase + '/api/auth/me', cred),
+          fetch(apiBase + '/api/forbrug-indtastet', cred),
+        ]);
+        const me = await meRes.json();
+        const d = await dataRes.json();
+        if (!dataRes.ok) throw new Error(d.error || 'Kunne ikke hente data');
+        canEdit = !!me.canEditOversigt;
+        state = d;
+        render();
+      } catch (e) {
+        document.getElementById('fiErr').textContent = e.message || String(e);
+        document.getElementById('fiErr').style.display = 'block';
+        document.getElementById('fiHint').textContent = '';
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 # Andelsforeningen Friland – Årsregnskab
 
-Webapp med årsregnskab for Andelsforeningen Friland. Indeholder resultatopgørelse og formueopgørelse, med mulighed for at hente data fra e-conomic.
+Webapp med årsregnskab for Andelsforeningen Friland. Resultatopgørelse hentes fra e-conomic.
 
 ## Start applikationen
 
@@ -9,7 +9,12 @@ npm install
 npm start
 ```
 
-Åbn http://localhost:3000 i browseren.
+Du bør se `*** Friland kører på http://localhost:3000 ***` i terminalen. Åbn derefter **http://localhost:3000** i din browser.
+
+**Hvis der ikke sker noget:**
+1. Prøv `node server.js` direkte (i stedet for `npm start`)
+2. Prøv en anden port: `PORT=3001 node server.js` → åbn http://localhost:3001
+3. Test om serveren kører: åbn http://localhost:3000/api/ping – du bør se `{"ok":true,"msg":"Serveren kører"}`
 
 ## e-conomic integration
 
@@ -32,4 +37,12 @@ Appen henter regnskabsdata fra e-conomics REST API via en backend-proxy.
 
 ### Brug
 
-Vælg regnskabsår og klik på **"Hent fra e-conomic"**. Kontoplan med totaler vises i en separat sektion under det statiske årsregnskab.
+Vælg regnskabsår og klik på **"Hent fra e-conomic"**. Resultatopgørelsen opdateres med data fra e-conomic.
+
+### Verificer mapping
+
+Klik på **"Verificer mapping"** for at sammenligne e-conomic med Excel-reference (regnskab-2025.json). Dette tjekker at de korrekte konti hentes fra e-conomic. Excel bruges kun som reference – tal vises kun fra e-conomic. Bemærk: Excel og e-conomic skal have samme regnskabsperiode (fx 01.03.25–28.02.26). Hvis e-conomic bruger kalenderår, vil tallene ikke matche.
+
+### Tilpasning af kontomapping
+
+Mappingen ligger i `arsregnskab-struktur.js`. Her mappes Frilands kontonumre (1010, 1020, 1310, 1320 osv.) til årsregnskabets poster. Kontrollér at e-conomic har samme kontoplan – ellers tilpas `konti`-arrayet for hver post.

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saldobalancer – Andelsforeningen Friland</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    .ledger-toolbar { display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end; margin: 1.5rem 0; padding: 1rem 1.25rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 2px 8px var(--shadow); }
+    .ledger-toolbar label { display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); }
+    .ledger-toolbar input { padding: 0.5rem 0.65rem; border: 1px solid var(--border); border-radius: 6px; font-family: inherit; min-width: 11rem; }
+    .ledger-toolbar button { padding: 0.55rem 1.1rem; background: var(--accent); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-family: inherit; }
+    .ledger-toolbar button:hover { background: var(--accent-light); }
+    .ledger-year-bar { margin: 0 0 1rem 0; padding: 0.85rem 1rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; }
+    .ledger-year-bar .ledger-year-label { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin: 0 0 0.65rem 0; }
+    .ledger-year-buttons { display: flex; flex-wrap: wrap; gap: 0.45rem; align-items: center; }
+    .ledger-year-buttons button { padding: 0.4rem 0.65rem; font-size: 0.8125rem; font-weight: 600; border-radius: 6px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-primary); cursor: pointer; font-family: inherit; }
+    .ledger-year-buttons button:hover { background: var(--bg-secondary); border-color: var(--accent-muted); }
+    .ledger-year-buttons button.is-active { background: var(--accent); color: white; border-color: var(--accent); }
+    .ledger-year-buttons button.ledger-btn-muted { color: var(--text-secondary); }
+    .ledger-meta { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem; }
+    .ledger-table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-card); }
+    table.ledger { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+    table.ledger th, table.ledger td { padding: 0.65rem 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+    table.ledger th { background: var(--bg-secondary); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-secondary); }
+    table.ledger tr:last-child td { border-bottom: none; }
+    table.ledger td.num { text-align: right; font-weight: 500; }
+    .ledger-error { padding: 1rem; background: #fde8e8; color: #8b1a1a; border-radius: 8px; margin: 1rem 0; }
+    .ledger-hint { font-size: 0.875rem; color: var(--text-secondary); max-width: 52rem; line-height: 1.5; }
+  </style>
+</head>
+<body>
+  <nav class="topmenu">
+    <a href="oversigt.html">Oversigt</a>
+    <a href="send-faktura.html">Send faktura</a>
+    <a href="forbrug-indtastet.html">Forbrug</a>
+    <a href="kontingent.html">Kontingent</a>
+    <a href="brugeradmin.html" id="navBrugeradmin" style="display:none;">Brugeradmin</a>
+    <div class="topmenu-dropdown active">
+      <button type="button" class="topmenu-dropdown-toggle" aria-expanded="false" aria-haspopup="true">Fra Economic</button>
+      <div class="topmenu-dropdown-panel" role="menu">
+        <a href="index.html" role="menuitem">Årsregnskab</a>
+        <a href="saldobalance-supabase.html" class="active" role="menuitem">Saldobalancer</a>
+        <a href="kontoplan.html" role="menuitem">Kontoplan</a>
+        <a href="forbrug.html" role="menuitem">Forbrug fra Economic</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="page-header">
+    <h1>Saldobalancer</h1>
+    <p class="subtitle">Beregnet som SUM(amount) pr. konto over synkroniserede posteringer</p>
+  </header>
+
+  <main class="content">
+    <p class="ledger-hint">
+      Data kommer fra tabellerne <code>accounts</code> og <code>entries</code> i Supabase (PostgreSQL), udfyldt af <code>npm run sync:supabase</code>.
+      Tom periode = alle posteringer. Med datoer filtreres på <code>entry_date</code>.
+      Standardperioder følger regnskabsår 1.3–28./29.2 (fx 2020/21 = 2020-03-01 … 2021-02-28).
+    </p>
+
+    <div class="ledger-year-bar" aria-label="Hurtigvalg regnskabsår">
+      <p class="ledger-year-label">Regnskabsår (1/3 – 28/29/2)</p>
+      <div class="ledger-year-buttons" id="yearButtons"></div>
+    </div>
+
+    <div class="ledger-toolbar">
+      <label>Fra dato
+        <input type="date" id="fromDate" />
+      </label>
+      <label>Til dato
+        <input type="date" id="toDate" />
+      </label>
+      <button type="button" id="hentBtn">Opdatér tabel</button>
+    </div>
+    <p class="ledger-meta" id="meta"></p>
+    <div id="err" class="ledger-error" style="display:none;"></div>
+    <div class="ledger-table-wrap">
+      <table class="ledger" id="tbl" aria-label="Saldobalance">
+        <thead>
+          <tr>
+            <th>Kontonummer</th>
+            <th>Kontonavn</th>
+            <th style="text-align:right">Saldo</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </main>
+
+  <script>
+    const tbody = document.getElementById('tbody');
+    const meta = document.getElementById('meta');
+    const errBox = document.getElementById('err');
+    const fromInput = document.getElementById('fromDate');
+    const toInput = document.getElementById('toDate');
+    const yearButtonsEl = document.getElementById('yearButtons');
+
+    /** Siste dag i februar for kalenderår y (28 eller 29) */
+    function febLastDay(y) {
+      const leap = (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0;
+      return leap ? 29 : 28;
+    }
+
+    /** Regnskabsår med start 1/3 startYear: [fromISO, toISO] */
+    function regnskabsaarRange(startYear) {
+      const y = Number(startYear);
+      const endY = y + 1;
+      const d = febLastDay(endY);
+      return {
+        from: `${y}-03-01`,
+        to: `${endY}-02-${String(d).padStart(2, '0')}`,
+        label: `${y}/${String(endY).slice(-2)}`,
+      };
+    }
+
+    function setActiveYearButton(activeBtn) {
+      yearButtonsEl.querySelectorAll('button[data-start-year]').forEach((b) => b.classList.remove('is-active'));
+      if (activeBtn) activeBtn.classList.add('is-active');
+    }
+
+    function buildYearButtons() {
+      const yNow = new Date().getFullYear();
+      const lastStart = yNow + 1;
+      const frag = document.createDocumentFragment();
+
+      const allBtn = document.createElement('button');
+      allBtn.type = 'button';
+      allBtn.className = 'ledger-btn-muted';
+      allBtn.textContent = 'Alle posteringer';
+      allBtn.addEventListener('click', () => {
+        fromInput.value = '';
+        toInput.value = '';
+        setActiveYearButton(null);
+        hent();
+      });
+      frag.appendChild(allBtn);
+
+      for (let start = 2020; start <= lastStart; start++) {
+        const { from, to, label } = regnskabsaarRange(start);
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.dataset.startYear = String(start);
+        btn.dataset.from = from;
+        btn.dataset.to = to;
+        btn.title = `${from} – ${to}`;
+        btn.textContent = label;
+        btn.addEventListener('click', () => {
+          fromInput.value = from;
+          toInput.value = to;
+          setActiveYearButton(btn);
+          hent();
+        });
+        frag.appendChild(btn);
+      }
+      yearButtonsEl.appendChild(frag);
+    }
+
+    function showErr(msg) {
+      errBox.textContent = msg;
+      errBox.style.display = msg ? 'block' : 'none';
+    }
+
+    function formatKr(n) {
+      return new Intl.NumberFormat('da-DK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(Number(n));
+    }
+
+    async function hent() {
+      showErr('');
+      tbody.innerHTML = '';
+      meta.textContent = 'Henter …';
+      const fromDate = fromInput.value || '';
+      const toDate = toInput.value || '';
+      const matchBtn = Array.from(yearButtonsEl.querySelectorAll('button[data-start-year]')).find(
+        (b) => b.dataset.from === fromDate && b.dataset.to === toDate
+      );
+      setActiveYearButton(matchBtn || null);
+      const q = new URLSearchParams();
+      if (fromDate) q.set('fromDate', fromDate);
+      if (toDate) q.set('toDate', toDate);
+      const url = '/api/supabase/ledger-balance?' + q.toString();
+      try {
+        const res = await fetch(url, { credentials: 'include' });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          throw new Error(data.error || res.statusText || 'Ukendt fejl');
+        }
+        const rows = data.rows || [];
+        meta.textContent =
+          (fromDate || toDate
+            ? `Periode: ${fromDate || '…'} – ${toDate || '…'} · `
+            : 'Hele perioden (alle synkroniserede posteringer) · ') +
+          `${rows.length} konti`;
+        for (const r of rows) {
+          const bal = Number(r.balance);
+          const tr = document.createElement('tr');
+          tr.innerHTML =
+            '<td>' + escapeHtml(String(r.account_number)) + '</td>' +
+            '<td>' + escapeHtml(String(r.name ?? '')) + '</td>' +
+            '<td class="num">' + formatKr(bal) + '</td>';
+          tbody.appendChild(tr);
+        }
+        if (tbody.children.length === 0) {
+          meta.textContent += ' · ingen konti (kør migration + npm run sync:supabase)';
+        }
+      } catch (e) {
+        meta.textContent = '';
+        showErr(e.message || String(e));
+      }
+    }
+
+    function escapeHtml(s) {
+      return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    document.getElementById('hentBtn').addEventListener('click', hent);
+    buildYearButtons();
+    hent();
+  </script>
+  <script src="auth-nav.js"></script>
+</body>
+</html>

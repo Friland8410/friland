@@ -1,0 +1,190 @@
+{
+  "version": 1,
+  "periodLabel": "2026-2027",
+  "rows": [
+    {
+      "type": "data",
+      "id": "row-0",
+      "label": "Administration",
+      "samletForbrug": 0
+    },
+    {
+      "type": "data",
+      "id": "row-1",
+      "label": "Bankgebyr & rente",
+      "samletForbrug": 0
+    },
+    {
+      "type": "data",
+      "id": "row-2",
+      "label": "Drift af Ravnen",
+      "samletForbrug": 0
+    },
+    {
+      "type": "data",
+      "id": "row-3",
+      "label": "Reno Djurs",
+      "samletForbrug": 0
+    },
+    {
+      "type": "data",
+      "id": "row-4",
+      "label": "Generalforsamling",
+      "samletForbrug": 0
+    },
+    {
+      "type": "data",
+      "id": "row-5",
+      "label": "Grundskyld fællesareal",
+      "samletForbrug": 0
+    },
+    {
+      "type": "data",
+      "id": "row-6",
+      "label": "Drift af ressourceplads",
+      "samletForbrug": 0
+    },
+    {
+      "type": "data",
+      "id": "row-7",
+      "label": "Pleje af fællesarealer - fællesarealgruppen",
+      "samletForbrug": 0
+    },
+    {
+      "type": "data",
+      "id": "row-8",
+      "label": "Medlemsskab af foreninger",
+      "samletForbrug": 0
+    },
+    {
+      "type": "data",
+      "id": "row-9",
+      "label": "Arbejdsdage",
+      "samletForbrug": 0
+    },
+    {
+      "type": "data",
+      "id": "row-10",
+      "label": "Fonden Nødværge - årligt rådighedsbeløb",
+      "samletForbrug": 0
+    },
+    {
+      "type": "data",
+      "id": "row-11",
+      "label": "Fællesspisninger",
+      "samletForbrug": 0
+    },
+    {
+      "type": "data",
+      "id": "row-12",
+      "label": "Solhvervsfest 2024",
+      "samletForbrug": 0
+    },
+    {
+      "type": "data",
+      "id": "row-13",
+      "label": "Æbledag",
+      "samletForbrug": 0
+    },
+    {
+      "type": "data",
+      "id": "row-14",
+      "label": "Spontane gaver",
+      "samletForbrug": 0
+    },
+    {
+      "type": "data",
+      "id": "row-15",
+      "label": "Ansvarsforsikring \"bestyrelsen\"",
+      "samletForbrug": 0
+    },
+    {
+      "type": "data",
+      "id": "row-16",
+      "label": "Frilands samlings rådighedsbeløb",
+      "samletForbrug": 0
+    },
+    {
+      "type": "data",
+      "id": "row-17",
+      "label": "Økonomigruppen rådighedsbeløb",
+      "samletForbrug": 0
+    },
+    {
+      "type": "separator",
+      "id": "sep-18"
+    },
+    {
+      "type": "data",
+      "id": "row-19",
+      "label": "1 Nye skilte på Friland",
+      "samletForbrug": 0
+    },
+    {
+      "type": "data",
+      "id": "row-20",
+      "label": "2 Nyt intranet \"Heynabo\"",
+      "samletForbrug": 0
+    },
+    {
+      "type": "data",
+      "id": "row-21",
+      "label": "3a FrilandsFestival",
+      "samletForbrug": 0
+    },
+    {
+      "type": "data",
+      "id": "row-22",
+      "label": "3b Aktivit støtter Frilands Fællesskab",
+      "samletForbrug": 0
+    },
+    {
+      "type": "data",
+      "id": "row-23",
+      "label": "Sct. Hans",
+      "samletForbrug": 0
+    },
+    {
+      "type": "data",
+      "id": "row-24",
+      "label": "5 Emhætte til Ravnens køkken",
+      "samletForbrug": 0
+    },
+    {
+      "type": "data",
+      "id": "row-25",
+      "label": "8 Julestue",
+      "samletForbrug": 0
+    },
+    {
+      "type": "data",
+      "id": "row-26",
+      "label": "9 Flere og længere arbejdsdage",
+      "samletForbrug": 0
+    },
+    {
+      "type": "data",
+      "id": "row-27",
+      "label": "10 Opgradering af lille sal til film og musik",
+      "samletForbrug": 0
+    },
+    {
+      "type": "data",
+      "id": "row-28",
+      "label": "11 Vand projektgruppen",
+      "samletForbrug": 0
+    },
+    {
+      "type": "data",
+      "id": "row-29",
+      "label": "12 Remisen (fælles værkste)",
+      "samletForbrug": 0
+    },
+    {
+      "type": "data",
+      "id": "row-30",
+      "label": "13 Legeplads - genansøgning",
+      "samletForbrug": 0
+    }
+  ]
+}

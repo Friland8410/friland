@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forbrug fra Economic – Andelsforeningen Friland</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    .forbrug-admin-bar { margin: 0 0 1rem 0; padding: 0.85rem 1rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: flex-end; }
+    .forbrug-admin-bar label { display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); }
+    .forbrug-admin-bar input[type="password"] { padding: 0.45rem 0.65rem; border-radius: 6px; border: 1px solid var(--border); min-width: 12rem; font: inherit; }
+    .forbrug-admin-bar .admin-ok { font-size: 0.875rem; color: var(--positive); font-weight: 600; }
+    .forbrug-toolbar { display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end; margin: 1.5rem 0; padding: 1rem 1.25rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 2px 8px var(--shadow); }
+    .forbrug-toolbar label { display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); }
+    .forbrug-toolbar select { padding: 0.5rem 0.75rem; border-radius: 6px; border: 1px solid var(--border); font-family: inherit; min-width: 9rem; }
+    .forbrug-toolbar button { padding: 0.55rem 1.1rem; border-radius: 6px; border: none; font-weight: 600; font-family: inherit; cursor: pointer; }
+    .forbrug-toolbar .btn-primary { background: var(--accent); color: white; }
+    .forbrug-toolbar .btn-primary:hover { background: var(--accent-light); }
+    .forbrug-toolbar .btn-secondary { background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border); }
+    .forbrug-toolbar .btn-secondary:hover { border-color: var(--accent-muted); }
+    .forbrug-toolbar button:disabled { opacity: 0.45; cursor: not-allowed; }
+    .forbrug-meta { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem; }
+    .forbrug-hint { font-size: 0.875rem; color: var(--text-secondary); max-width: 52rem; line-height: 1.55; margin-bottom: 1rem; }
+    .forbrug-table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-card); }
+    table.forbrug { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+    table.forbrug th, table.forbrug td { padding: 0.65rem 1rem; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+    table.forbrug th { background: var(--bg-secondary); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-secondary); }
+    table.forbrug tr:last-child td { border-bottom: none; }
+    table.forbrug td.beloeb { text-align: right; font-weight: 600; white-space: nowrap; }
+    table.forbrug .navn-celle { cursor: default; }
+    table.forbrug .navn-celle.kan-rette { cursor: pointer; }
+    table.forbrug .navn-celle.kan-rette:hover { color: var(--accent); }
+    table.forbrug input.navn-edit { width: 100%; max-width: 28rem; padding: 0.35rem 0.5rem; border: 1px solid var(--accent); border-radius: 4px; font: inherit; }
+    table.forbrug input.forbrug-beloeb-edit { width: 9.5rem; text-align: right; padding: 0.35rem 0.5rem; border: 1px solid var(--border); border-radius: 4px; font: inherit; font-variant-numeric: tabular-nums; }
+    table.forbrug input.forbrug-beloeb-edit::placeholder { color: var(--text-secondary); font-weight: 400; opacity: 0.85; }
+    .forbrug-error { padding: 1rem; background: #fde8e8; color: #8b1a1a; border-radius: 8px; margin: 1rem 0; }
+    .forbrug-actions { margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+    .dirty-hint { font-size: 0.85rem; color: #8a5a00; }
+    .forbrug-manuel-hint { font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.25rem; }
+  </style>
+</head>
+<body>
+  <nav class="topmenu">
+    <a href="oversigt.html">Oversigt</a>
+    <a href="send-faktura.html">Send faktura</a>
+    <a href="forbrug-indtastet.html">Forbrug</a>
+    <a href="kontingent.html">Kontingent</a>
+    <a href="brugeradmin.html" id="navBrugeradmin" style="display:none;">Brugeradmin</a>
+    <div class="topmenu-dropdown active">
+      <button type="button" class="topmenu-dropdown-toggle" aria-expanded="false" aria-haspopup="true">Fra Economic</button>
+      <div class="topmenu-dropdown-panel" role="menu">
+        <a href="index.html" role="menuitem">Årsregnskab</a>
+        <a href="saldobalance-supabase.html" role="menuitem">Saldobalancer</a>
+        <a href="kontoplan.html" role="menuitem">Kontoplan</a>
+        <a href="forbrug.html" class="active" role="menuitem">Forbrug fra Economic</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="page-header">
+    <h1>Forbrug fra Economic</h1>
+    <p class="subtitle">Udgifter pr. kategori i det valgte regnskabsår (data fra Supabase)</p>
+  </header>
+
+  <main class="content">
+    <p class="forbrug-hint" id="hintTekst">
+      Vælg <strong>regnskabsår</strong> (1. marts – sidste dag i februar). Beløb beregnes ud fra bogføring bag hver kategori og kan overskrives med et <strong>manuelt beløb</strong>.
+      Kun <strong>administratorer</strong> (efter login med email og kode) kan rette titler, tilføje linjer og indtaste manuelle beløb. Almindelige brugere kan se tallene.
+    </p>
+
+    <div class="forbrug-admin-bar" id="adminBar">
+      <div id="loginForm" style="display:flex; flex-wrap:wrap; gap:0.85rem; align-items:flex-end;">
+        <label style="display:flex; flex-direction:column; gap:0.35rem; font-size:0.8rem; font-weight:600; color:var(--text-secondary);">Email
+          <input type="email" id="loginEmail" autocomplete="username" style="padding:0.45rem 0.65rem; border-radius:6px; border:1px solid var(--border); min-width:14rem; font:inherit;" />
+        </label>
+        <label style="display:flex; flex-direction:column; gap:0.35rem; font-size:0.8rem; font-weight:600; color:var(--text-secondary);">Kode
+          <input type="password" id="loginKode" autocomplete="current-password" style="padding:0.45rem 0.65rem; border-radius:6px; border:1px solid var(--border); min-width:10rem; font:inherit;" />
+        </label>
+        <button type="button" class="btn-primary" id="loginBtn">Log ind</button>
+      </div>
+      <div id="brugerInfo" style="display:none; align-items:center; gap:1rem; flex-wrap:wrap;">
+        <span class="admin-ok" id="brugerInfoTekst"></span>
+        <button type="button" class="btn-secondary" id="logoutBtn">Log ud</button>
+      </div>
+    </div>
+
+    <div class="forbrug-toolbar">
+      <label>Regnskabsår (startår)
+        <select id="aarValg"></select>
+      </label>
+      <button type="button" class="btn-primary" id="hentBtn">Hent tal</button>
+      <button type="button" class="btn-secondary" id="tilfoejBtn" disabled>Tilføj linje</button>
+      <button type="button" class="btn-primary" id="gemBtn" disabled>Gem opsætning</button>
+      <button type="button" class="btn-primary" id="gemManuelleBtn" disabled>Gem manuelle beløb</button>
+    </div>
+    <p class="forbrug-meta" id="meta"></p>
+    <p class="forbrug-manuel-hint" id="manuelHint" style="display:none;">Tomt beløbsfelt = brug det automatisk beregnede tal. Udfyld feltet for at fastholde et manuelt tal for dette år.</p>
+    <div id="err" class="forbrug-error" style="display:none;"></div>
+
+    <div class="forbrug-table-wrap">
+      <table class="forbrug" id="tbl">
+        <thead>
+          <tr>
+            <th>Kategori</th>
+            <th style="text-align:right">Beløb</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <div class="forbrug-actions">
+      <span class="dirty-hint" id="dirtyHint" style="display:none;">Du har ugemte ændringer i kategoriopsætningen.</span>
+    </div>
+  </main>
+
+  <script src="auth-nav.js"></script>
+  <script>
+    const apiBase =
+      window.location.origin && window.location.origin !== 'null'
+        ? window.location.origin
+        : 'http://localhost:3000';
+
+    const SESSION_KEY = 'frilandAuthToken';
+    const cred = { credentials: 'include' };
+
+    const tbody = document.getElementById('tbody');
+    const meta = document.getElementById('meta');
+    const errBox = document.getElementById('err');
+    const aarValg = document.getElementById('aarValg');
+    const dirtyHint = document.getElementById('dirtyHint');
+    const loginForm = document.getElementById('loginForm');
+    const loginEmail = document.getElementById('loginEmail');
+    const loginKode = document.getElementById('loginKode');
+    const loginBtn = document.getElementById('loginBtn');
+    const brugerInfo = document.getElementById('brugerInfo');
+    const brugerInfoTekst = document.getElementById('brugerInfoTekst');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const tilfoejBtn = document.getElementById('tilfoejBtn');
+    const gemBtn = document.getElementById('gemBtn');
+    const gemManuelleBtn = document.getElementById('gemManuelleBtn');
+    const manuelHint = document.getElementById('manuelHint');
+
+    let rækker = [];
+    let beloebMap = {};
+    let beloebBeregnetMap = {};
+    let harManueltMap = {};
+    let editingId = null;
+    let dirty = false;
+    let isAdmin = false;
+    let loggedIn = false;
+    let userEmail = '';
+
+    const yNow = new Date().getFullYear();
+    for (let y = 2020; y <= yNow + 1; y++) {
+      const opt = document.createElement('option');
+      opt.value = String(y);
+      opt.textContent = y + '/' + String(y + 1).slice(-2);
+      aarValg.appendChild(opt);
+    }
+    aarValg.value = String(Math.min(2025, yNow));
+
+    function authHeaders(extra) {
+      const t = sessionStorage.getItem(SESSION_KEY);
+      const h = Object.assign({ 'Content-Type': 'application/json' }, extra || {});
+      if (t) h.Authorization = 'Bearer ' + t;
+      return h;
+    }
+
+    function showErr(msg) {
+      errBox.textContent = msg || '';
+      errBox.style.display = msg ? 'block' : 'none';
+    }
+
+    function formatKr(n) {
+      return new Intl.NumberFormat('da-DK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(Number(n));
+    }
+
+    /** dansk: 7.088,50 → 7088.5 */
+    function parseBeloebDa(s) {
+      if (s == null || !String(s).trim()) return null;
+      let t = String(s).trim().replace(/\s/g, '');
+      t = t.replace(/\./g, '').replace(',', '.');
+      const n = parseFloat(t);
+      return Number.isFinite(n) ? n : null;
+    }
+
+    function setDirty(v) {
+      dirty = v;
+      dirtyHint.style.display = isAdmin && v ? 'inline' : 'none';
+    }
+
+    function opdaterAdminKnapper() {
+      tilfoejBtn.disabled = !isAdmin;
+      gemBtn.disabled = !isAdmin;
+      gemManuelleBtn.disabled = !isAdmin;
+      manuelHint.style.display = isAdmin ? 'block' : 'none';
+      if (loggedIn) {
+        loginForm.style.display = 'none';
+        brugerInfo.style.display = 'flex';
+        brugerInfoTekst.textContent = isAdmin
+          ? 'Administrator: ' + userEmail
+          : 'Logget ind som ' + userEmail + ' (almindelig bruger — kan ikke redigere)';
+      } else {
+        loginForm.style.display = 'flex';
+        brugerInfo.style.display = 'none';
+        brugerInfoTekst.textContent = '';
+      }
+    }
+
+    async function tjekAuth() {
+      try {
+        const res = await fetch(apiBase + '/api/auth/me', { ...cred, headers: authHeaders() });
+        const data = await res.json().catch(() => ({}));
+        loggedIn = !!data.loggedIn;
+        userEmail = data.email || '';
+        isAdmin = !!data.admin;
+        opdaterAdminKnapper();
+        setDirty(dirty);
+      } catch {
+        loggedIn = false;
+        userEmail = '';
+        isAdmin = false;
+        opdaterAdminKnapper();
+      }
+    }
+
+    function render() {
+      tbody.innerHTML = '';
+      for (const r of rækker) {
+        const tr = document.createElement('tr');
+        const belVist = beloebMap[r.id];
+        const beregnet = beloebBeregnetMap[r.id] != null ? beloebBeregnetMap[r.id] : 0;
+        const harManuelt = !!harManueltMap[r.id];
+
+        const tdNavn = document.createElement('td');
+        tdNavn.className = 'navn-celle' + (isAdmin ? ' kan-rette' : '');
+        if (isAdmin && editingId === r.id) {
+          const inp = document.createElement('input');
+          inp.type = 'text';
+          inp.className = 'navn-edit';
+          inp.value = r.navn;
+          inp.addEventListener('keydown', (ev) => {
+            if (ev.key === 'Enter') {
+              r.navn = inp.value.trim() || r.navn;
+              editingId = null;
+              setDirty(true);
+              render();
+            }
+            if (ev.key === 'Escape') {
+              editingId = null;
+              render();
+            }
+          });
+          inp.addEventListener('blur', () => {
+            r.navn = inp.value.trim() || r.navn;
+            editingId = null;
+            setDirty(true);
+            render();
+          });
+          tdNavn.appendChild(inp);
+          setTimeout(() => inp.focus(), 0);
+        } else {
+          tdNavn.textContent = r.navn;
+          tdNavn.title = isAdmin ? 'Klik for at rette navn' : '';
+          if (isAdmin) {
+            tdNavn.addEventListener('click', () => {
+              editingId = r.id;
+              render();
+            });
+          }
+        }
+
+        const tdBel = document.createElement('td');
+        tdBel.className = 'beloeb';
+        if (isAdmin) {
+          const binp = document.createElement('input');
+          binp.type = 'text';
+          binp.className = 'forbrug-beloeb-edit';
+          binp.dataset.kategoriId = r.id;
+          binp.dataset.beregnet = String(beregnet);
+          binp.dataset.hadManual = harManuelt ? '1' : '0';
+          binp.placeholder = formatKr(beregnet);
+          if (harManuelt) binp.value = formatKr(belVist != null ? belVist : 0);
+          tdBel.appendChild(binp);
+        } else {
+          tdBel.textContent = belVist != null ? formatKr(belVist) : '–';
+        }
+
+        tr.appendChild(tdNavn);
+        tr.appendChild(tdBel);
+        tbody.appendChild(tr);
+      }
+    }
+
+    async function hentKategorier() {
+      const res = await fetch(apiBase + '/api/forbrug/kategorier', cred);
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || 'Kunne ikke hente kategorier');
+      rækker = (data.kategorier || []).map((k) => ({
+        id: k.id,
+        navn: k.navn,
+        konti: [...(k.konti || [])],
+      }));
+      setDirty(false);
+    }
+
+    async function hentTal() {
+      showErr('');
+      meta.textContent = 'Henter …';
+      const y = aarValg.value;
+      try {
+        if (rækker.length === 0) await hentKategorier();
+        const res = await fetch(apiBase + '/api/forbrug/aggregat', {
+          ...cred,
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            startYear: Number(y),
+            kategorier: rækker.map((r) => ({ id: r.id, navn: r.navn, konti: r.konti })),
+          }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || 'Kunne ikke hente forbrug');
+        beloebMap = {};
+        beloebBeregnetMap = {};
+        harManueltMap = {};
+        for (const k of data.kategorier || []) {
+          beloebMap[k.id] = k.beloeb;
+          beloebBeregnetMap[k.id] = k.beloebBeregnet;
+          harManueltMap[k.id] = k.harManueltBeloeb;
+        }
+        meta.textContent =
+          'Periode ' + data.fromDate + ' – ' + data.toDate + ' · ' + (data.kategorier || []).length + ' kategorier';
+        editingId = null;
+        render();
+      } catch (e) {
+        meta.textContent = '';
+        showErr(e.message || String(e));
+        beloebMap = {};
+        beloebBeregnetMap = {};
+        harManueltMap = {};
+        render();
+      }
+    }
+
+    async function gemOpsaetning() {
+      showErr('');
+      try {
+        const body = { version: 1, kategorier: rækker.map((r) => ({ id: r.id, navn: r.navn, konti: r.konti })) };
+        const res = await fetch(apiBase + '/api/forbrug/kategorier', {
+          ...cred,
+          method: 'PUT',
+          headers: authHeaders(),
+          body: JSON.stringify(body),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.status === 401 || res.status === 403) {
+          sessionStorage.removeItem(SESSION_KEY);
+          await tjekAuth();
+          throw new Error(data.error || 'Ingen adgang');
+        }
+        if (!res.ok) throw new Error(data.error || 'Kunne ikke gemme');
+        rækker = (data.kategorier || []).map((k) => ({
+          id: k.id,
+          navn: k.navn,
+          konti: [...(k.konti || [])],
+        }));
+        setDirty(false);
+        await hentTal();
+      } catch (e) {
+        showErr(e.message || String(e));
+      }
+    }
+
+    async function gemManuelleBeloeb() {
+      showErr('');
+      const y = aarValg.value;
+      const overrides = {};
+      const inputs = document.querySelectorAll('input.forbrug-beloeb-edit');
+      for (const inp of inputs) {
+        const id = inp.dataset.kategoriId;
+        const beregnet = Number(inp.dataset.beregnet);
+        const hadManual = inp.dataset.hadManual === '1';
+        const raw = inp.value.trim();
+        if (raw === '') {
+          if (hadManual) overrides[id] = null;
+        } else {
+          const p = parseBeloebDa(raw);
+          if (p == null) {
+            showErr('Ugyldigt beløb for "' + id + '". Brug fx 7.088,50');
+            return;
+          }
+          if (Math.abs(p - beregnet) < 0.005) overrides[id] = null;
+          else overrides[id] = p;
+        }
+      }
+      try {
+        const res = await fetch(apiBase + '/api/forbrug/manuelle/' + encodeURIComponent(y), {
+          ...cred,
+          method: 'PUT',
+          headers: authHeaders(),
+          body: JSON.stringify({ overrides }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.status === 401 || res.status === 403) {
+          sessionStorage.removeItem(SESSION_KEY);
+          await tjekAuth();
+          throw new Error(data.error || 'Ingen adgang');
+        }
+        if (!res.ok) throw new Error(data.error || 'Kunne ikke gemme manuelle beløb');
+        beloebMap = {};
+        beloebBeregnetMap = {};
+        harManueltMap = {};
+        for (const k of data.kategorier || []) {
+          beloebMap[k.id] = k.beloeb;
+          beloebBeregnetMap[k.id] = k.beloebBeregnet;
+          harManueltMap[k.id] = k.harManueltBeloeb;
+        }
+        meta.textContent =
+          'Periode ' + data.fromDate + ' – ' + data.toDate + ' · Manuelle beløb gemt';
+        render();
+      } catch (e) {
+        showErr(e.message || String(e));
+      }
+    }
+
+    loginBtn.addEventListener('click', async () => {
+      showErr('');
+      const email = loginEmail.value.trim();
+      const password = loginKode.value;
+      try {
+        const res = await fetch(apiBase + '/api/auth/login', {
+          ...cred,
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || 'Login fejlede');
+        sessionStorage.setItem(SESSION_KEY, data.token);
+        loginKode.value = '';
+        await tjekAuth();
+        render();
+      } catch (e) {
+        showErr(e.message || String(e));
+      }
+    });
+
+    logoutBtn.addEventListener('click', async () => {
+      await fetch(apiBase + '/api/auth/logout', {
+        ...cred,
+        method: 'POST',
+        headers: authHeaders(),
+      });
+      sessionStorage.removeItem(SESSION_KEY);
+      editingId = null;
+      await tjekAuth();
+      await hentTal();
+    });
+
+    document.getElementById('hentBtn').addEventListener('click', hentTal);
+    document.getElementById('gemBtn').addEventListener('click', gemOpsaetning);
+    document.getElementById('gemManuelleBtn').addEventListener('click', gemManuelleBeloeb);
+    document.getElementById('tilfoejBtn').addEventListener('click', () => {
+      if (!isAdmin) return;
+      const id = 'linje-' + (crypto.randomUUID ? crypto.randomUUID().slice(0, 8) : String(Date.now()));
+      rækker.push({ id, navn: 'Ny kategori', konti: [] });
+      beloebMap[id] = 0;
+      beloebBeregnetMap[id] = 0;
+      harManueltMap[id] = false;
+      setDirty(true);
+      editingId = id;
+      render();
+    });
+
+    aarValg.addEventListener('change', hentTal);
+
+    (async function init() {
+      await tjekAuth();
+      await hentTal();
+    })();
+  </script>
+</body>
+</html>

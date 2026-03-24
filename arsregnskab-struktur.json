@@ -1,0 +1,34 @@
+{
+  "indtaegter": [
+    { "post": "kontingent", "navn": "Kontingent" },
+    { "post": "grundskyld", "navn": "Grundskyld" },
+    { "post": "renteindtaegter", "navn": "Renteindtægter bank" }
+  ],
+  "udgifter": [
+    { "post": "administration", "navn": "Administration" },
+    { "post": "fondenNoedvaerge", "navn": "Fonden Nødværge" },
+    { "post": "ansvarsforsikring", "navn": "Ansvarsforsikring" },
+    { "post": "renoDjurs", "navn": "Reno Djurs" },
+    { "post": "generalforsamling", "navn": "Generalforsamling" },
+    { "post": "driftRessourceplads", "navn": "Drift af ressourceplads" },
+    { "post": "vedligeholdelseVeje", "navn": "Vedligeholdelse af veje" },
+    { "post": "plejeFaellesarealer", "navn": "Pleje af fællesarealer" },
+    { "post": "medlemsskab", "navn": "Medlemsskab af foreninger" },
+    { "post": "frilandsaften", "navn": "Frilandsaften rådighedsbeløb" },
+    { "post": "oekonomigruppen", "navn": "Økonomigruppens rådighedsbeløb" },
+    { "post": "tilskudFestival", "navn": "Tilskud til Festival 25" },
+    { "post": "skilte", "navn": "Skilte" },
+    { "post": "arbejdsdage", "navn": "Arbejdsdage" },
+    { "post": "ravnebidrag", "navn": "Ravnebidrag" },
+    { "post": "aebledag", "navn": "Æbledag" },
+    { "post": "remise", "navn": "Remise" },
+    { "post": "sctHans", "navn": "Sct. Hans fest" },
+    { "post": "faellesspisning", "navn": "Fællesspisning" },
+    { "post": "spontaneGaver", "navn": "Spontane gaver" },
+    { "post": "livIRavnen", "navn": "Liv i Ravnen" },
+    { "post": "solhvervsfest", "navn": "Solhvervsfest" },
+    { "post": "syddjursRottebekaempelse", "navn": "Syddjurs Kommune Rottebekæmpelse" },
+    { "post": "projekterGF", "navn": "Projekter godkendt på GF (svævebane)" },
+    { "post": "grundskyldOpkraevning", "navn": "Grundskyld opkrævning" }
+  ]
+}

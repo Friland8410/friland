@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "kategorier": [
+    { "id": "administration", "navn": "Administration", "konti": [1310] },
+    { "id": "bankRente", "navn": "Bankgebyr & rente", "konti": [1313, 4410, 4460, 4465] },
+    { "id": "driftRavnen", "navn": "Drift af Ravnen", "konti": [2529] },
+    { "id": "renoDjurs", "navn": "Reno Djurs", "konti": [1320] },
+    { "id": "generalforsamling", "navn": "Generalforsamling", "konti": [1321] },
+    { "id": "grundskyldFaelles", "navn": "Grundskyld fællesareal", "konti": [1324] },
+    { "id": "driftRessourceplads", "navn": "Drift af ressourceplads", "konti": [1325] },
+    { "id": "plejeFaelles", "navn": "Pleje af fællesarealer - fællesarealgruppen", "konti": [1327] },
+    { "id": "medlemsskab", "navn": "Medlemsskab af foreninger", "konti": [1328] },
+    { "id": "arbejdsdage", "navn": "Arbejdsdage", "konti": [2510] },
+    { "id": "fondenNoedvaerge", "navn": "Fonden Nødværge  - årligt rådighedsbeløb", "konti": [1311] },
+    { "id": "faellesspisning", "navn": "Fællesspisninger", "konti": [2520] },
+    { "id": "solhvervsfest", "navn": "Solhvervsfest 2024", "konti": [2530] },
+    { "id": "aebledag", "navn": "Æbledag", "konti": [2512] },
+    { "id": "spontaneGaver", "navn": "Spontane gaver", "konti": [2521] },
+    { "id": "ansvarsforsikring", "navn": "Ansvarsforsikring \"bestyrelsen\"", "konti": [1312] },
+    { "id": "frilandsSamling", "navn": "Frilands samlings rådighedsbeløb", "konti": [1380] },
+    { "id": "oekonomigruppen", "navn": "Økonomigruppen rådighedsbeløb", "konti": [1385] },
+    { "id": "vandgruppen", "navn": "Vandgruppen", "konti": [] },
+    { "id": "ravnestyrVedligehold", "navn": "Ravnestyregruppen vedligehold Ravnen", "konti": [2511] },
+    { "id": "ravnestyrForgang", "navn": "Ravnestyregruppen renovering af forgang", "konti": [] },
+    { "id": "svaervebane", "navn": "Svævebane", "konti": [2640] },
+    { "id": "sctHans", "navn": "Sct. Hans fællesspisning", "konti": [2518] }
+  ]
+}

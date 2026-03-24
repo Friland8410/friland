@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Økonomisk oversigt – Friland</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    .ov-wrap { max-width: 56rem; margin: 0 auto; }
+    .ov-toolbar { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; margin-bottom: 1.25rem; padding: 0.85rem 1rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; }
+    .ov-toolbar button { padding: 0.5rem 1rem; border-radius: 6px; border: none; font-weight: 600; cursor: pointer; font-family: inherit; background: var(--accent); color: white; }
+    .ov-toolbar button:hover { background: var(--accent-light); }
+    .ov-toolbar .ov-btn-sek { background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border); }
+    button.ov-btn-sek { padding: 0.35rem 0.65rem; font-size: 0.8rem; border-radius: 6px; border: 1px solid var(--border); background: var(--bg-secondary); color: var(--text-primary); cursor: pointer; font-family: inherit; }
+    button.ov-btn-sek:hover { border-color: var(--accent-muted); }
+    .ov-status { font-size: 0.875rem; color: var(--text-secondary); }
+    .ov-hint { font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.5; }
+    .ov-title { font-size: 1.35rem; font-weight: 700; margin: 0 0 1.25rem 0; line-height: 1.3; }
+    .ov-period-input { width: 100%; max-width: 28rem; padding: 0.5rem 0.65rem; border-radius: 6px; border: 1px solid var(--border); font: inherit; margin-bottom: 1.25rem; }
+    .ov-section { margin: 2rem 0; }
+    .ov-section h2 { font-size: 1.05rem; margin: 0 0 0.65rem 0; color: var(--accent); }
+    .ov-table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-card); }
+    table.ov { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: 0.9rem; }
+    table.ov th, table.ov td { padding: 0.5rem 0.75rem; text-align: left; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    table.ov th { background: var(--bg-secondary); font-weight: 600; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-secondary); }
+    table.ov tr:last-child td { border-bottom: none; }
+    table.ov td.num, table.ov th.num { text-align: right; white-space: nowrap; }
+    table.ov tr.ov-total td { font-weight: 700; background: var(--bg-secondary); border-bottom: none; }
+    table.ov tr.ov-subtotal td { font-weight: 600; background: rgba(45, 90, 74, 0.06); }
+    table.ov input.ov-inp { width: 100%; min-width: 5rem; max-width: 10rem; padding: 0.3rem 0.45rem; border: 1px solid var(--border); border-radius: 4px; font: inherit; text-align: right; }
+    table.ov input.ov-inp-label { max-width: 100%; text-align: left; min-width: 12rem; }
+    table.ov .ov-row-actions { white-space: nowrap; }
+    table.ov .ov-row-actions button { padding: 0.2rem 0.45rem; font-size: 0.75rem; border-radius: 4px; border: 1px solid var(--border); background: var(--bg-secondary); cursor: pointer; font-family: inherit; }
+    table.ov .ov-row-actions button.ov-del:hover { border-color: #c44; color: #8b1a1a; }
+    .ov-resultat { margin: 1.5rem 0; padding: 1rem 1.25rem; border-radius: 8px; background: #e8f5ef; border: 1px solid var(--accent-muted); font-weight: 700; font-size: 1.05rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+    .ov-err { padding: 1rem; background: #fde8e8; color: #8b1a1a; border-radius: 8px; margin: 1rem 0; }
+  </style>
+</head>
+<body>
+  <nav class="topmenu">
+    <a href="oversigt.html" class="active">Oversigt</a>
+    <a href="send-faktura.html">Send faktura</a>
+    <a href="forbrug-indtastet.html">Forbrug</a>
+    <a href="kontingent.html">Kontingent</a>
+    <a href="brugeradmin.html" id="navBrugeradmin" style="display:none;">Brugeradmin</a>
+    <div class="topmenu-dropdown">
+      <button type="button" class="topmenu-dropdown-toggle" aria-expanded="false" aria-haspopup="true">Fra Economic</button>
+      <div class="topmenu-dropdown-panel" role="menu">
+        <a href="index.html" role="menuitem">Årsregnskab</a>
+        <a href="saldobalance-supabase.html" role="menuitem">Saldobalancer</a>
+        <a href="kontoplan.html" role="menuitem">Kontoplan</a>
+        <a href="forbrug.html" role="menuitem">Forbrug fra Economic</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="page-header">
+    <h1>Økonomisk oversigt</h1>
+    <p class="subtitle">Samlet overblik over budget, forbrug og likviditet</p>
+  </header>
+
+  <main class="content">
+    <div class="ov-wrap" id="ovWrap">
+      <p class="ov-hint" id="ovHint">Henter …</p>
+      <div id="ovErr" class="ov-err" style="display:none;"></div>
+      <div class="ov-toolbar" id="ovToolbar" style="display:none;">
+        <button type="button" id="ovGem">Gem ændringer</button>
+        <span class="ov-status" id="ovStatus"></span>
+      </div>
+      <div id="ovRoot"></div>
+    </div>
+  </main>
+
+  <script src="auth-nav.js"></script>
+  <script>
+    const apiBase =
+      window.location.origin && window.location.origin !== 'null'
+        ? window.location.origin
+        : 'http://localhost:3000';
+    const cred = { credentials: 'include' };
+
+    let data = null;
+    let canEdit = false;
+
+    function rid() {
+      return 'x' + (crypto.randomUUID ? crypto.randomUUID().replace(/-/g, '').slice(0, 12) : String(Date.now()));
+    }
+
+    function formatKr(n) {
+      if (n == null || !Number.isFinite(Number(n))) return '–';
+      return new Intl.NumberFormat('da-DK', { maximumFractionDigits: 0 }).format(Math.round(Number(n)));
+    }
+
+    function parseKr(s) {
+      if (s == null || !String(s).trim()) return 0;
+      let t = String(s).trim().replace(/\s/g, '');
+      t = t.replace(/\./g, '').replace(',', '.');
+      const n = parseFloat(t);
+      return Number.isFinite(n) ? n : 0;
+    }
+
+    function pct(forbrug, budget) {
+      const b = Number(budget);
+      const f = Number(forbrug);
+      if (!b) return '–';
+      return new Intl.NumberFormat('da-DK', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format((f / b) * 100) + ' %';
+    }
+
+    function sumBeloeb(rows) {
+      return (rows || []).reduce((s, r) => s + (Number(r.beloeb) || 0), 0);
+    }
+    function sumBudget(rows) {
+      return (rows || []).reduce((s, r) => s + (Number(r.budget) || 0), 0);
+    }
+    function sumForbrug(rows) {
+      return (rows || []).reduce((s, r) => s + (Number(r.forbrug) || 0), 0);
+    }
+    function sumKontingentTotal(rows) {
+      return (rows || []).reduce((s, r) => s + (Number(r.total) || 0), 0);
+    }
+
+    function derived(d) {
+      const indIalt = sumBeloeb(d.indtaegter);
+      const fasteF = sumForbrug(d.fasteUdgifter);
+      const fasteB = sumBudget(d.fasteUdgifter);
+      const raadF = sumForbrug(d.raadighed);
+      const raadB = sumBudget(d.raadighed);
+      const projF = sumForbrug(d.projekter);
+      const projB = sumBudget(d.projekter);
+      const fasteIalt = fasteF + raadF;
+      const fasteIaltBudget = fasteB + raadB;
+      const totalUdg = fasteIalt + projF;
+      const totalUdgBudget = fasteIaltBudget + projB;
+      const periodRes = indIalt - totalUdg;
+      const kontingentIalt = sumKontingentTotal(d.kontingent);
+      return {
+        indIalt,
+        fasteF,
+        fasteB,
+        raadF,
+        raadB,
+        projF,
+        projB,
+        fasteIalt,
+        fasteIaltBudget,
+        totalUdg,
+        totalUdgBudget,
+        periodRes,
+        kontingentIalt,
+      };
+    }
+
+    function esc(s) {
+      return String(s ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function rowActionsHtml(section, rowId) {
+      if (!canEdit) return '';
+      return (
+        '<td class="ov-row-actions"><button type="button" class="ov-del" data-section="' +
+        esc(section) +
+        '" data-id="' +
+        esc(rowId) +
+        '">Slet</button></td>'
+      );
+    }
+
+    function addBtnHtml(section, label) {
+      if (!canEdit) return '';
+      return (
+        '<p style="margin:0.5rem 0 0 0;"><button type="button" class="ov-btn-sek" data-add="' +
+        esc(section) +
+        '">+ ' +
+        esc(label) +
+        '</button></p>'
+      );
+    }
+
+    function render() {
+      const root = document.getElementById('ovRoot');
+      const hint = document.getElementById('ovHint');
+      const toolbar = document.getElementById('ovToolbar');
+      if (!data) {
+        root.innerHTML = '';
+        return;
+      }
+      hint.textContent = canEdit
+        ? 'Du kan tilføje, slette og rette linjer. Husk at gemme.'
+        : 'Du ser oversigten som den er gemt. Kun administrator og bogholder kan rette.';
+      toolbar.style.display = canEdit ? 'flex' : 'none';
+
+      const dv = derived(data);
+      const pLabel = canEdit
+        ? '<label class="ov-title" style="display:block;">Periode (overskrift)<input type="text" class="ov-period-input" id="ovPeriod" value="' +
+          esc(data.periodLabel) +
+          '" /></label>'
+        : '<p class="ov-title">Friland økonomisk overblik for ' + esc(data.periodLabel) + '</p>';
+
+      let html = pLabel;
+
+      html += '<section class="ov-section"><h2>Indtægter</h2><div class="ov-table-wrap"><table class="ov"><thead><tr><th>Beskrivelse</th><th class="num">Beløb</th>' + (canEdit ? '<th></th>' : '') + '</tr></thead><tbody>';
+      for (const r of data.indtaegter) {
+        html +=
+          '<tr><td>' +
+          (canEdit
+            ? '<input type="text" class="ov-inp ov-inp-label" data-s="indtaegter" data-i="' +
+              esc(r.id) +
+              '" data-f="label" value="' +
+              esc(r.label) +
+              '" />'
+            : esc(r.label)) +
+          '</td><td class="num">' +
+          (canEdit
+            ? '<input type="text" class="ov-inp" data-s="indtaegter" data-i="' +
+              esc(r.id) +
+              '" data-f="beloeb" value="' +
+              formatKr(r.beloeb) +
+              '" />'
+            : formatKr(r.beloeb)) +
+          '</td>' +
+          rowActionsHtml('indtaegter', r.id) +
+          '</tr>';
+      }
+      html +=
+        '<tr class="ov-total"><td>Kontingent mm. i alt</td><td class="num">' +
+        formatKr(dv.indIalt) +
+        '</td>' +
+        (canEdit ? '<td></td>' : '') +
+        '</tr></tbody></table></div>' +
+        addBtnHtml('indtaegter', 'Indtægtslinje') +
+        '</section>';
+
+      function treTable(title, key, footerLabel, showSubFooter) {
+        let t =
+          '<section class="ov-section"><h2>' +
+          esc(title) +
+          '</h2><div class="ov-table-wrap"><table class="ov"><thead><tr><th>Beskrivelse</th><th class="num">Budget</th><th class="num">Forbrug</th><th class="num">Forbrug %</th>' +
+          (canEdit ? '<th></th>' : '') +
+          '</tr></thead><tbody>';
+        const rows = data[key];
+        for (const r of rows) {
+          const p = pct(r.forbrug, r.budget);
+          t +=
+            '<tr><td>' +
+            (canEdit
+              ? '<input type="text" class="ov-inp ov-inp-label" data-s="' +
+                esc(key) +
+                '" data-i="' +
+                esc(r.id) +
+                '" data-f="label" value="' +
+                esc(r.label) +
+                '" />'
+              : esc(r.label)) +
+            '</td><td class="num">' +
+            (canEdit
+              ? '<input type="text" class="ov-inp" data-s="' +
+                esc(key) +
+                '" data-i="' +
+                esc(r.id) +
+                '" data-f="budget" value="' +
+                formatKr(r.budget) +
+                '" />'
+              : formatKr(r.budget)) +
+            '</td><td class="num">' +
+            (canEdit
+              ? '<input type="text" class="ov-inp" data-s="' +
+                esc(key) +
+                '" data-i="' +
+                esc(r.id) +
+                '" data-f="forbrug" value="' +
+                formatKr(r.forbrug) +
+                '" />'
+              : formatKr(r.forbrug)) +
+            '</td><td class="num">' +
+            esc(p) +
+            '</td>' +
+            rowActionsHtml(key, r.id) +
+            '</tr>';
+        }
+        const sf = sumForbrug(rows);
+        const sb = sumBudget(rows);
+        t +=
+          '<tr class="ov-total"><td>' +
+          esc(footerLabel) +
+          '</td><td class="num">' +
+          formatKr(sb) +
+          '</td><td class="num">' +
+          formatKr(sf) +
+          '</td><td class="num">' +
+          pct(sf, sb) +
+          '</td>' +
+          (canEdit ? '<td></td>' : '') +
+          '</tr>';
+        if (showSubFooter) {
+          t +=
+            '<tr class="ov-subtotal"><td>Faste udgifter i alt</td><td class="num">' +
+            formatKr(dv.fasteIaltBudget) +
+            '</td><td class="num">' +
+            formatKr(dv.fasteIalt) +
+            '</td><td class="num">' +
+            pct(dv.fasteIalt, dv.fasteIaltBudget) +
+            '</td>' +
+            (canEdit ? '<td></td>' : '') +
+            '</tr>';
+        }
+        t += '</tbody></table></div>' + addBtnHtml(key, 'Linje') + '</section>';
+        return t;
+      }
+
+      html += treTable('Faste udgifter', 'fasteUdgifter', 'Total faste udgifter', false);
+      html += treTable('Rådighedsbeløb', 'raadighed', 'Rådighedsbeløb', true);
+
+      html += '<section class="ov-section"><h2>Bevilgede max. beløb til de vedtagne projekter</h2><div class="ov-table-wrap"><table class="ov"><thead><tr><th>Beskrivelse</th><th class="num">Budget</th><th class="num">Forbrug</th><th class="num">Forbrug %</th>' + (canEdit ? '<th></th>' : '') + '</tr></thead><tbody>';
+      for (const r of data.projekter) {
+        const p = pct(r.forbrug, r.budget);
+        html +=
+          '<tr><td>' +
+          (canEdit
+            ? '<input type="text" class="ov-inp ov-inp-label" data-s="projekter" data-i="' +
+              esc(r.id) +
+              '" data-f="label" value="' +
+              esc(r.label) +
+              '" />'
+            : esc(r.label)) +
+          '</td><td class="num">' +
+          (canEdit
+            ? '<input type="text" class="ov-inp" data-s="projekter" data-i="' +
+              esc(r.id) +
+              '" data-f="budget" value="' +
+              formatKr(r.budget) +
+              '" />'
+            : formatKr(r.budget)) +
+          '</td><td class="num">' +
+          (canEdit
+            ? '<input type="text" class="ov-inp" data-s="projekter" data-i="' +
+              esc(r.id) +
+              '" data-f="forbrug" value="' +
+              formatKr(r.forbrug) +
+              '" />'
+            : formatKr(r.forbrug)) +
+          '</td><td class="num">' +
+          esc(p) +
+          '</td>' +
+          rowActionsHtml('projekter', r.id) +
+          '</tr>';
+      }
+      html +=
+        '<tr class="ov-total"><td>Sum vedtagne projekter</td><td class="num">' +
+        formatKr(dv.projB) +
+        '</td><td class="num">' +
+        formatKr(dv.projF) +
+        '</td><td class="num">' +
+        pct(dv.projF, dv.projB) +
+        '</td>' +
+        (canEdit ? '<td></td>' : '') +
+        '</tr>';
+      html +=
+        '<tr class="ov-subtotal"><td>Total udgifter for Friland</td><td class="num">' +
+        formatKr(dv.totalUdgBudget) +
+        '</td><td class="num">' +
+        formatKr(dv.totalUdg) +
+        '</td><td class="num">' +
+        pct(dv.totalUdg, dv.totalUdgBudget) +
+        '</td>' +
+        (canEdit ? '<td></td>' : '') +
+        '</tr></tbody></table></div>' +
+        addBtnHtml('projekter', 'Projektlinje') +
+        '</section>';
+
+      html +=
+        '<div class="ov-resultat"><span>Periodens resultat</span><span>' +
+        formatKr(dv.periodRes) +
+        ' kr</span></div>';
+
+      html += '<section class="ov-section"><h2>Kontingent</h2><div class="ov-table-wrap"><table class="ov"><thead><tr><th>Beskrivelse</th><th class="num">Antal</th><th class="num">Sats</th><th class="num">I alt</th>' + (canEdit ? '<th></th>' : '') + '</tr></thead><tbody>';
+      for (const r of data.kontingent) {
+        html +=
+          '<tr><td>' +
+          (canEdit
+            ? '<input type="text" class="ov-inp ov-inp-label" data-s="kontingent" data-i="' +
+              esc(r.id) +
+              '" data-f="label" value="' +
+              esc(r.label) +
+              '" />'
+            : esc(r.label)) +
+          '</td><td class="num">' +
+          (canEdit
+            ? '<input type="text" class="ov-inp" data-s="kontingent" data-i="' +
+              esc(r.id) +
+              '" data-f="antal" value="' +
+              (r.antal == null ? '' : esc(r.antal)) +
+              '" />'
+            : r.antal == null ? '–' : esc(r.antal)) +
+          '</td><td class="num">' +
+          (canEdit
+            ? '<input type="text" class="ov-inp" data-s="kontingent" data-i="' +
+              esc(r.id) +
+              '" data-f="sats" value="' +
+              (r.sats == null ? '' : formatKr(r.sats)) +
+              '" />'
+            : r.sats == null ? '–' : formatKr(r.sats)) +
+          '</td><td class="num">' +
+          (canEdit
+            ? '<input type="text" class="ov-inp" data-s="kontingent" data-i="' +
+              esc(r.id) +
+              '" data-f="total" value="' +
+              formatKr(r.total) +
+              '" />'
+            : formatKr(r.total)) +
+          '</td>' +
+          rowActionsHtml('kontingent', r.id) +
+          '</tr>';
+      }
+      html +=
+        '<tr class="ov-total"><td>Total</td><td class="num" colspan="2"></td><td class="num">' +
+        formatKr(dv.kontingentIalt) +
+        '</td>' +
+        (canEdit ? '<td></td>' : '') +
+        '</tr></tbody></table></div>' +
+        addBtnHtml('kontingent', 'Kontingentlinje') +
+        '</section>';
+
+      html += '<section class="ov-section"><h2>Likviditet og aktiver</h2><div class="ov-table-wrap"><table class="ov"><thead><tr><th>Beskrivelse</th><th class="num">Beløb</th>' + (canEdit ? '<th></th>' : '') + '</tr></thead><tbody>';
+      for (const r of data.likviditetLinjer) {
+        html +=
+          '<tr><td>' +
+          (canEdit
+            ? '<input type="text" class="ov-inp ov-inp-label" data-s="likviditetLinjer" data-i="' +
+              esc(r.id) +
+              '" data-f="label" value="' +
+              esc(r.label) +
+              '" />'
+            : esc(r.label)) +
+          '</td><td class="num">' +
+          (canEdit
+            ? '<input type="text" class="ov-inp" data-s="likviditetLinjer" data-i="' +
+              esc(r.id) +
+              '" data-f="beloeb" value="' +
+              formatKr(r.beloeb) +
+              '" />'
+            : formatKr(r.beloeb)) +
+          '</td>' +
+          rowActionsHtml('likviditetLinjer', r.id) +
+          '</tr>';
+      }
+      html += '</tbody></table></div>' + addBtnHtml('likviditetLinjer', 'Linje') + '</section>';
+
+      html += '<section class="ov-section"><div class="ov-table-wrap"><table class="ov"><tbody>';
+      html +=
+        '<tr class="ov-total"><td>Likvide værdier i alt primo</td><td class="num">' +
+        (canEdit
+          ? '<input type="text" class="ov-inp" id="ovPrimo" value="' + formatKr(data.likviditetPrimo) + '" />'
+          : formatKr(data.likviditetPrimo)) +
+        '</td></tr>';
+      html +=
+        '<tr class="ov-total"><td>Likvide værdier i alt ultimo</td><td class="num">' +
+        (canEdit
+          ? '<input type="text" class="ov-inp" id="ovUltimo" value="' + formatKr(data.likviditetUltimo) + '" />'
+          : formatKr(data.likviditetUltimo)) +
+        '</td></tr>';
+      html +=
+        '<tr><td>Garantbevis Rønde Sparekasse</td><td class="num">' +
+        (canEdit
+          ? '<input type="text" class="ov-inp" id="ovGarant" value="' + formatKr(data.garantbevis) + '" />'
+          : formatKr(data.garantbevis)) +
+        '</td></tr>';
+      html += '</tbody></table></div></section>';
+
+      root.innerHTML = html;
+    }
+
+    function findRow(arr, id) {
+      return arr.find((x) => x.id === id);
+    }
+
+    function syncFromDom() {
+      if (!data || !canEdit) return;
+      const per = document.getElementById('ovPeriod');
+      if (per) data.periodLabel = per.value.trim() || data.periodLabel;
+      document.querySelectorAll('[data-s][data-i][data-f]').forEach((el) => {
+        const s = el.getAttribute('data-s');
+        const id = el.getAttribute('data-i');
+        const f = el.getAttribute('data-f');
+        const arr = data[s];
+        if (!Array.isArray(arr)) return;
+        const row = findRow(arr, id);
+        if (!row) return;
+        if (f === 'label') row.label = el.value;
+        else if (f === 'beloeb') row.beloeb = parseKr(el.value);
+        else if (f === 'budget') row.budget = parseKr(el.value);
+        else if (f === 'forbrug') row.forbrug = parseKr(el.value);
+        else if (f === 'antal') {
+          const v = el.value.trim();
+          row.antal = v === '' ? null : parseKr(v);
+        } else if (f === 'sats') {
+          const v = el.value.trim();
+          row.sats = v === '' ? null : parseKr(v);
+        }         else if (f === 'total') row.total = parseKr(el.value);
+      });
+      const pr = document.getElementById('ovPrimo');
+      const ul = document.getElementById('ovUltimo');
+      const ga = document.getElementById('ovGarant');
+      if (pr) data.likviditetPrimo = parseKr(pr.value);
+      if (ul) data.likviditetUltimo = parseKr(ul.value);
+      if (ga) data.garantbevis = parseKr(ga.value);
+    }
+
+    async function gem() {
+      const st = document.getElementById('ovStatus');
+      syncFromDom();
+      st.textContent = 'Gemmer …';
+      try {
+        const res = await fetch(apiBase + '/api/oversigt', {
+          ...cred,
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+        const d = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(d.error || 'Kunne ikke gemme');
+        data = d;
+        st.textContent = 'Gemt.';
+        setTimeout(() => {
+          st.textContent = '';
+        }, 2500);
+        render();
+      } catch (e) {
+        st.textContent = '';
+        document.getElementById('ovErr').textContent = e.message || String(e);
+        document.getElementById('ovErr').style.display = 'block';
+      }
+    }
+
+    document.getElementById('ovGem').addEventListener('click', gem);
+
+    document.getElementById('ovWrap').addEventListener('click', function (ev) {
+      if (!canEdit || !data) return;
+      const add = ev.target.getAttribute && ev.target.getAttribute('data-add');
+      if (add) {
+        syncFromDom();
+        if (add === 'indtaegter') data.indtaegter.push({ id: rid(), label: 'Ny linje', beloeb: 0 });
+        else if (add === 'fasteUdgifter' || add === 'raadighed' || add === 'projekter')
+          data[add].push({ id: rid(), label: 'Ny linje', budget: 0, forbrug: 0 });
+        else if (add === 'kontingent')
+          data.kontingent.push({ id: rid(), label: 'Ny linje', antal: null, sats: null, total: 0 });
+        else if (add === 'likviditetLinjer') data.likviditetLinjer.push({ id: rid(), label: 'Ny linje', beloeb: 0 });
+        render();
+        return;
+      }
+      if (ev.target.classList && ev.target.classList.contains('ov-del')) {
+        const section = ev.target.getAttribute('data-section');
+        const id = ev.target.getAttribute('data-id');
+        if (!section || !id || !data[section]) return;
+        syncFromDom();
+        data[section] = data[section].filter((x) => x.id !== id);
+        render();
+      }
+    });
+
+    (async function init() {
+      const errEl = document.getElementById('ovErr');
+      errEl.style.display = 'none';
+      try {
+        const [meRes, dataRes] = await Promise.all([
+          fetch(apiBase + '/api/auth/me', cred),
+          fetch(apiBase + '/api/oversigt', cred),
+        ]);
+        const me = await meRes.json();
+        const d = await dataRes.json();
+        if (!dataRes.ok) throw new Error(d.error || 'Kunne ikke hente oversigt');
+        canEdit = !!me.canEditOversigt;
+        data = d;
+        render();
+      } catch (e) {
+        errEl.textContent = e.message || String(e);
+        errEl.style.display = 'block';
+        document.getElementById('ovHint').textContent = '';
+      }
+    })();
+  </script>
+</body>
+</html>
