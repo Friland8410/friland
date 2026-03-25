@@ -84,7 +84,6 @@
       </div>
       <div id="brugerInfo" style="display:none; align-items:center; gap:1rem; flex-wrap:wrap;">
         <span class="admin-ok" id="brugerInfoTekst"></span>
-        <button type="button" class="btn-secondary" id="logoutBtn">Log ud</button>
       </div>
     </div>
 
@@ -138,7 +137,6 @@
     const loginBtn = document.getElementById('loginBtn');
     const brugerInfo = document.getElementById('brugerInfo');
     const brugerInfoTekst = document.getElementById('brugerInfoTekst');
-    const logoutBtn = document.getElementById('logoutBtn');
     const tilfoejBtn = document.getElementById('tilfoejBtn');
     const gemBtn = document.getElementById('gemBtn');
     const gemManuelleBtn = document.getElementById('gemManuelleBtn');
@@ -448,18 +446,6 @@
       } catch (e) {
         showErr(e.message || String(e));
       }
-    });
-
-    logoutBtn.addEventListener('click', async () => {
-      await fetch(apiBase + '/api/auth/logout', {
-        ...cred,
-        method: 'POST',
-        headers: authHeaders(),
-      });
-      sessionStorage.removeItem(SESSION_KEY);
-      editingId = null;
-      await tjekAuth();
-      await hentTal();
     });
 
     document.getElementById('hentBtn').addEventListener('click', hentTal);
