@@ -138,10 +138,42 @@ function authStoreUsesSupabase() {
 
 function throwIfVercelReadOnlyFile() {
   const err = new Error(
-    'Kan ikke gemme til data/ på Vercel. Sæt SUPABASE_URL og SUPABASE_SERVICE_ROLE_KEY, og kør SQL i supabase/migrations/20250325160000_friland_auth.sql',
+    'Kan ikke gemme til data/ på Vercel. Sæt SUPABASE_URL og SUPABASE_SERVICE_ROLE_KEY og kør SQL: 20250325160000_friland_auth.sql + 20250325170000_friland_documents.sql',
   );
   err.status = 503;
   throw err;
+}
+
+const DOC_OVERSIGT = 'oversigt';
+const DOC_FORBRUG_INDTASTET = 'forbrug-indtastet';
+const DOC_KONTINGENT = 'kontingent';
+const DOC_FORBRUG_STATE = 'forbrug-kategorier-state';
+const DOC_FORBRUG_MANUEL = 'forbrug-manuelle-beloeb';
+
+async function loadJsonDocument(key) {
+  const sb = getSupabaseAdmin();
+  if (!sb) throw new Error('Supabase er ikke konfigureret');
+  const { data, error } = await sb.from('friland_documents').select('payload').eq('doc_key', key).maybeSingle();
+  if (error) throw error;
+  return data?.payload ?? null;
+}
+
+async function saveJsonDocument(key, payload) {
+  const sb = getSupabaseAdmin();
+  if (!sb) throwIfVercelReadOnlyFile();
+  const { error } = await sb.from('friland_documents').upsert(
+    { doc_key: key, payload: payload ?? {}, updated_at: new Date().toISOString() },
+    { onConflict: 'doc_key' },
+  );
+  if (error) throw error;
+}
+
+async function documentRowExists(key) {
+  const sb = getSupabaseAdmin();
+  if (!sb) return false;
+  const { data, error } = await sb.from('friland_documents').select('doc_key').eq('doc_key', key).maybeSingle();
+  if (error) return false;
+  return Boolean(data);
 }
 
 async function loadUsersFromSupabase() {
@@ -328,6 +360,15 @@ function normalizeOversigtPayload(body) {
 }
 
 async function loadOversigt() {
+  if (authStoreUsesSupabase()) {
+    try {
+      const p = await loadJsonDocument(DOC_OVERSIGT);
+      if (p && typeof p === 'object') return normalizeOversigtPayload(p);
+    } catch (e) {
+      console.error('[oversigt] Supabase:', e.message || e);
+    }
+    return normalizeOversigtPayload(createDefaultOversigt());
+  }
   try {
     const raw = await readFile(OVERSIGT_JSON, 'utf8');
     const j = JSON.parse(raw);
@@ -339,12 +380,30 @@ async function loadOversigt() {
 
 async function saveOversigt(data) {
   const norm = normalizeOversigtPayload(data);
+  if (authStoreUsesSupabase()) {
+    await saveJsonDocument(DOC_OVERSIGT, norm);
+    return norm;
+  }
+  if (process.env.VERCEL === '1') throwIfVercelReadOnlyFile();
   await mkdir(join(ROOT, 'data'), { recursive: true });
   await writeFile(OVERSIGT_JSON, JSON.stringify(norm, null, 2), 'utf8');
   return norm;
 }
 
 async function ensureOversigtFile() {
+  if (authStoreUsesSupabase()) {
+    if (!(await documentRowExists(DOC_OVERSIGT))) {
+      try {
+        const raw = await readFile(OVERSIGT_JSON, 'utf8');
+        await saveOversigt(normalizeOversigtPayload(JSON.parse(raw)));
+        console.log('[oversigt] Seedet fra data/oversigt.json til Supabase');
+        return;
+      } catch (_) {}
+      await saveOversigt(createDefaultOversigt());
+      console.log('[oversigt] Oprettet standardlayout i Supabase');
+    }
+    return;
+  }
   try {
     await readFile(OVERSIGT_JSON);
   } catch {
@@ -373,6 +432,15 @@ function normalizeForbrugIndtastetPayload(body) {
 }
 
 async function loadForbrugIndtastet() {
+  if (authStoreUsesSupabase()) {
+    try {
+      const p = await loadJsonDocument(DOC_FORBRUG_INDTASTET);
+      if (p && typeof p === 'object') return normalizeForbrugIndtastetPayload(p);
+    } catch (e) {
+      console.error('[forbrug-indtastet] Supabase:', e.message || e);
+    }
+    return normalizeForbrugIndtastetPayload(createDefaultForbrugIndtastet());
+  }
   try {
     const raw = await readFile(FORBRUG_INDTASTET_JSON, 'utf8');
     const j = JSON.parse(raw);
@@ -384,12 +452,30 @@ async function loadForbrugIndtastet() {
 
 async function saveForbrugIndtastet(data) {
   const norm = normalizeForbrugIndtastetPayload(data);
+  if (authStoreUsesSupabase()) {
+    await saveJsonDocument(DOC_FORBRUG_INDTASTET, norm);
+    return norm;
+  }
+  if (process.env.VERCEL === '1') throwIfVercelReadOnlyFile();
   await mkdir(join(ROOT, 'data'), { recursive: true });
   await writeFile(FORBRUG_INDTASTET_JSON, JSON.stringify(norm, null, 2), 'utf8');
   return norm;
 }
 
 async function ensureForbrugIndtastetFile() {
+  if (authStoreUsesSupabase()) {
+    if (!(await documentRowExists(DOC_FORBRUG_INDTASTET))) {
+      try {
+        const raw = await readFile(FORBRUG_INDTASTET_JSON, 'utf8');
+        await saveForbrugIndtastet(normalizeForbrugIndtastetPayload(JSON.parse(raw)));
+        console.log('[forbrug-indtastet] Seedet fra data/forbrug-indtastet.json til Supabase');
+        return;
+      } catch (_) {}
+      await saveForbrugIndtastet(createDefaultForbrugIndtastet());
+      console.log('[forbrug-indtastet] Oprettet standardrækker i Supabase');
+    }
+    return;
+  }
   try {
     await readFile(FORBRUG_INDTASTET_JSON);
   } catch {
@@ -439,6 +525,15 @@ function normalizeKontingentPayload(body) {
 }
 
 async function loadKontingent() {
+  if (authStoreUsesSupabase()) {
+    try {
+      const p = await loadJsonDocument(DOC_KONTINGENT);
+      if (p && typeof p === 'object') return normalizeKontingentPayload(p);
+    } catch (e) {
+      console.error('[kontingent] Supabase:', e.message || e);
+    }
+    return normalizeKontingentPayload(createDefaultKontingent());
+  }
   try {
     const raw = await readFile(KONTINGENT_JSON, 'utf8');
     const j = JSON.parse(raw);
@@ -450,12 +545,30 @@ async function loadKontingent() {
 
 async function saveKontingent(data) {
   const norm = normalizeKontingentPayload(data);
+  if (authStoreUsesSupabase()) {
+    await saveJsonDocument(DOC_KONTINGENT, norm);
+    return norm;
+  }
+  if (process.env.VERCEL === '1') throwIfVercelReadOnlyFile();
   await mkdir(join(ROOT, 'data'), { recursive: true });
   await writeFile(KONTINGENT_JSON, JSON.stringify(norm, null, 2), 'utf8');
   return norm;
 }
 
 async function ensureKontingentFile() {
+  if (authStoreUsesSupabase()) {
+    if (!(await documentRowExists(DOC_KONTINGENT))) {
+      try {
+        const raw = await readFile(KONTINGENT_JSON, 'utf8');
+        await saveKontingent(normalizeKontingentPayload(JSON.parse(raw)));
+        console.log('[kontingent] Seedet fra data/kontingent.json til Supabase');
+        return;
+      } catch (_) {}
+      await saveKontingent(createDefaultKontingent());
+      console.log('[kontingent] Oprettet skabelon i Supabase');
+    }
+    return;
+  }
   try {
     await readFile(KONTINGENT_JSON);
   } catch {
@@ -688,6 +801,15 @@ function requireAdminOrBogholder(req, res, next) {
 }
 
 async function loadManuelleBeloeb() {
+  if (authStoreUsesSupabase()) {
+    try {
+      const p = await loadJsonDocument(DOC_FORBRUG_MANUEL);
+      if (p && typeof p === 'object' && !Array.isArray(p)) return p;
+    } catch (e) {
+      console.error('[forbrug-manuel] Supabase:', e.message || e);
+    }
+    return {};
+  }
   try {
     const raw = await readFile(FORBRUG_MANUEL_JSON, 'utf8');
     const j = JSON.parse(raw);
@@ -698,6 +820,11 @@ async function loadManuelleBeloeb() {
 }
 
 async function saveManuelleBeloebFile(obj) {
+  if (authStoreUsesSupabase()) {
+    await saveJsonDocument(DOC_FORBRUG_MANUEL, obj && typeof obj === 'object' ? obj : {});
+    return;
+  }
+  if (process.env.VERCEL === '1') throwIfVercelReadOnlyFile();
   await mkdir(join(ROOT, 'data'), { recursive: true });
   await writeFile(FORBRUG_MANUEL_JSON, JSON.stringify(obj, null, 2), 'utf8');
 }
@@ -752,6 +879,14 @@ function ledgerRowsTilTotalsMedMapping(balanceRows, kontoTilPost) {
 }
 
 async function loadForbrugKategorier() {
+  if (authStoreUsesSupabase()) {
+    try {
+      const p = await loadJsonDocument(DOC_FORBRUG_STATE);
+      if (p && typeof p === 'object' && Array.isArray(p.kategorier)) return { version: p.version || 1, kategorier: p.kategorier };
+    } catch (_) {}
+    const raw = await readFile(FORBRUG_DEFAULT_JSON, 'utf8');
+    return JSON.parse(raw);
+  }
   try {
     const raw = await readFile(FORBRUG_STATE_JSON, 'utf8');
     const j = JSON.parse(raw);
@@ -795,12 +930,14 @@ async function saveForbrugKategorier(body) {
     throw err;
   }
   const kategorier = validateForbrugKategoriListe(body.kategorier);
+  const doc = { version: body.version || 1, kategorier };
+  if (authStoreUsesSupabase()) {
+    await saveJsonDocument(DOC_FORBRUG_STATE, doc);
+    return { ok: true };
+  }
+  if (process.env.VERCEL === '1') throwIfVercelReadOnlyFile();
   await mkdir(join(ROOT, 'data'), { recursive: true });
-  await writeFile(
-    FORBRUG_STATE_JSON,
-    JSON.stringify({ version: body.version || 1, kategorier }, null, 2),
-    'utf8'
-  );
+  await writeFile(FORBRUG_STATE_JSON, JSON.stringify(doc, null, 2), 'utf8');
   return { ok: true };
 }
 
