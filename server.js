@@ -29,17 +29,19 @@ try {
 }
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+/** På Vercel ligger bundtet i en undermappe; process.cwd() er projektroden med includeFiles. */
+const ROOT = process.env.VERCEL ? process.cwd() : __dirname;
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const FORBRUG_DEFAULT_JSON = join(__dirname, 'forbrug-kategorier.json');
-const FORBRUG_STATE_JSON = join(__dirname, 'data', 'forbrug-kategorier-state.json');
-const FORBRUG_MANUEL_JSON = join(__dirname, 'data', 'forbrug-manuelle-beloeb.json');
-const USERS_JSON = join(__dirname, 'data', 'users.json');
-const SETTINGS_JSON = join(__dirname, 'data', 'settings.json');
-const OVERSIGT_JSON = join(__dirname, 'data', 'oversigt.json');
-const FORBRUG_INDTASTET_JSON = join(__dirname, 'data', 'forbrug-indtastet.json');
-const KONTINGENT_JSON = join(__dirname, 'data', 'kontingent.json');
+const FORBRUG_DEFAULT_JSON = join(ROOT, 'forbrug-kategorier.json');
+const FORBRUG_STATE_JSON = join(ROOT, 'data', 'forbrug-kategorier-state.json');
+const FORBRUG_MANUEL_JSON = join(ROOT, 'data', 'forbrug-manuelle-beloeb.json');
+const USERS_JSON = join(ROOT, 'data', 'users.json');
+const SETTINGS_JSON = join(ROOT, 'data', 'settings.json');
+const OVERSIGT_JSON = join(ROOT, 'data', 'oversigt.json');
+const FORBRUG_INDTASTET_JSON = join(ROOT, 'data', 'forbrug-indtastet.json');
+const KONTINGENT_JSON = join(ROOT, 'data', 'kontingent.json');
 
 const authSessions = new Map();
 const SESSION_COOKIE = 'friland_sid';
@@ -65,7 +67,7 @@ async function loadUsers() {
 }
 
 async function saveUsers(data) {
-  await mkdir(join(__dirname, 'data'), { recursive: true });
+  await mkdir(join(ROOT, 'data'), { recursive: true });
   await writeFile(USERS_JSON, JSON.stringify(data, null, 2), 'utf8');
 }
 
@@ -87,7 +89,7 @@ async function saveSettings(partial) {
   if (partial && partial.bookkeeperEmail !== undefined) {
     next.bookkeeperEmail = String(partial.bookkeeperEmail ?? '').trim();
   }
-  await mkdir(join(__dirname, 'data'), { recursive: true });
+  await mkdir(join(ROOT, 'data'), { recursive: true });
   await writeFile(SETTINGS_JSON, JSON.stringify(next, null, 2), 'utf8');
   return next;
 }
@@ -168,7 +170,7 @@ async function loadOversigt() {
 
 async function saveOversigt(data) {
   const norm = normalizeOversigtPayload(data);
-  await mkdir(join(__dirname, 'data'), { recursive: true });
+  await mkdir(join(ROOT, 'data'), { recursive: true });
   await writeFile(OVERSIGT_JSON, JSON.stringify(norm, null, 2), 'utf8');
   return norm;
 }
@@ -213,7 +215,7 @@ async function loadForbrugIndtastet() {
 
 async function saveForbrugIndtastet(data) {
   const norm = normalizeForbrugIndtastetPayload(data);
-  await mkdir(join(__dirname, 'data'), { recursive: true });
+  await mkdir(join(ROOT, 'data'), { recursive: true });
   await writeFile(FORBRUG_INDTASTET_JSON, JSON.stringify(norm, null, 2), 'utf8');
   return norm;
 }
@@ -279,7 +281,7 @@ async function loadKontingent() {
 
 async function saveKontingent(data) {
   const norm = normalizeKontingentPayload(data);
-  await mkdir(join(__dirname, 'data'), { recursive: true });
+  await mkdir(join(ROOT, 'data'), { recursive: true });
   await writeFile(KONTINGENT_JSON, JSON.stringify(norm, null, 2), 'utf8');
   return norm;
 }
@@ -474,7 +476,7 @@ async function loadManuelleBeloeb() {
 }
 
 async function saveManuelleBeloebFile(obj) {
-  await mkdir(join(__dirname, 'data'), { recursive: true });
+  await mkdir(join(ROOT, 'data'), { recursive: true });
   await writeFile(FORBRUG_MANUEL_JSON, JSON.stringify(obj, null, 2), 'utf8');
 }
 
@@ -571,7 +573,7 @@ async function saveForbrugKategorier(body) {
     throw err;
   }
   const kategorier = validateForbrugKategoriListe(body.kategorier);
-  await mkdir(join(__dirname, 'data'), { recursive: true });
+  await mkdir(join(ROOT, 'data'), { recursive: true });
   await writeFile(
     FORBRUG_STATE_JSON,
     JSON.stringify({ version: body.version || 1, kategorier }, null, 2),
@@ -1669,7 +1671,8 @@ app.use((req, res, next) => {
 });
 
 // Static files – kun for ikke-API paths
-app.use(express.static(join(__dirname, '.')));
+/** Statiske sider og assets (mappen hedder ikke «public» — Vercel CDN ville ellers omgå Express). */
+app.use(express.static(join(ROOT, 'static')));
 
 const supabaseAutoMs = Number(process.env.SUPABASE_AUTO_SYNC_MS || 0);
 if (supabaseAutoMs > 0) {
@@ -1692,11 +1695,15 @@ await ensureOversigtFile();
 await ensureForbrugIndtastetFile();
 await ensureKontingentFile();
 
-app.listen(PORT).on('error', (err) => {
-  if (err.code === 'EADDRINUSE') {
-    console.error(`Port ${PORT} er allerede i brug. Prøv: PORT=3001 npm start`);
-  } else {
-    console.error('Serverfejl:', err);
-  }
-  process.exit(1);
-});
+if (!process.env.VERCEL) {
+  app.listen(PORT).on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+      console.error(`Port ${PORT} er allerede i brug. Prøv: PORT=3001 npm start`);
+    } else {
+      console.error('Serverfejl:', err);
+    }
+    process.exit(1);
+  });
+}
+
+export default app;

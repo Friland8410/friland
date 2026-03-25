@@ -1,4 +1,10 @@
 {
+  "rewrites": [{ "source": "/(.*)", "destination": "/api" }],
+  "functions": {
+    "api/index.js": {
+      "includeFiles": ["static/**", "data/**", "forbrug-kategorier.json", "scripts/**"]
+    }
+  },
   "headers": [
     {
       "source": "/(.*)",
