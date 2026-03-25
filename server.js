@@ -113,7 +113,105 @@ function isValidEmail(s) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
 }
 
+let supabaseAdmin = null;
+function getSupabaseAdmin() {
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) return null;
+  if (!supabaseAdmin) {
+    supabaseAdmin = createClient(url, key);
+  }
+  return supabaseAdmin;
+}
+
+/**
+ * På Vercel er data/ skrivebeskyttet — brugere og settings gemmes i Supabase når service role er sat.
+ * Tving med FRILAND_AUTH_STORE=supabase; slå fra med FRILAND_AUTH_STORE=file.
+ */
+function authStoreUsesSupabase() {
+  if (process.env.FRILAND_AUTH_STORE === 'file') return false;
+  if (process.env.FRILAND_AUTH_STORE === 'supabase') {
+    return Boolean(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY);
+  }
+  return process.env.VERCEL === '1' && Boolean(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY);
+}
+
+function throwIfVercelReadOnlyFile() {
+  const err = new Error(
+    'Kan ikke gemme til data/ på Vercel. Sæt SUPABASE_URL og SUPABASE_SERVICE_ROLE_KEY, og kør SQL i supabase/migrations/20250325160000_friland_auth.sql',
+  );
+  err.status = 503;
+  throw err;
+}
+
+async function loadUsersFromSupabase() {
+  const sb = getSupabaseAdmin();
+  if (!sb) throw new Error('Supabase er ikke konfigureret (SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY).');
+  const { data, error } = await sb.from('friland_users').select('email, password_hash, role');
+  if (error) throw error;
+  const users = (data || []).map((r) => ({
+    email: normalizeEmail(r.email),
+    passwordHash: r.password_hash,
+    role: r.role,
+  }));
+  return { users };
+}
+
+async function saveUsersToSupabase(data) {
+  const sb = getSupabaseAdmin();
+  if (!sb) throwIfVercelReadOnlyFile();
+  const users = Array.isArray(data.users) ? data.users : [];
+  const rows = users.map((u) => ({
+    email: normalizeEmail(u.email),
+    password_hash: u.passwordHash,
+    role: u.role,
+  }));
+  for (const row of rows) {
+    const { error } = await sb.from('friland_users').upsert(row, { onConflict: 'email' });
+    if (error) throw error;
+  }
+  const keep = new Set(rows.map((r) => r.email));
+  const { data: existing, error: selErr } = await sb.from('friland_users').select('email');
+  if (selErr) throw selErr;
+  for (const r of existing || []) {
+    if (!keep.has(normalizeEmail(r.email))) {
+      const { error: delErr } = await sb.from('friland_users').delete().eq('email', r.email);
+      if (delErr) throw delErr;
+    }
+  }
+}
+
+async function loadSettingsFromSupabase() {
+  const sb = getSupabaseAdmin();
+  if (!sb) return { bookkeeperEmail: '' };
+  const { data, error } = await sb.from('friland_app_settings').select('bookkeeper_email').eq('id', 1).maybeSingle();
+  if (error) throw error;
+  if (!data) return { bookkeeperEmail: '' };
+  return { bookkeeperEmail: String(data.bookkeeper_email ?? '').trim() };
+}
+
+async function saveSettingsToSupabase(next) {
+  const sb = getSupabaseAdmin();
+  if (!sb) throwIfVercelReadOnlyFile();
+  const { error } = await sb
+    .from('friland_app_settings')
+    .upsert({ id: 1, bookkeeper_email: next.bookkeeperEmail }, { onConflict: 'id' });
+  if (error) throw error;
+}
+
+async function ensureFrilandAppSettingsSupabase() {
+  const sb = getSupabaseAdmin();
+  if (!sb) return;
+  const { error } = await sb
+    .from('friland_app_settings')
+    .upsert({ id: 1, bookkeeper_email: '' }, { onConflict: 'id' });
+  if (error) console.warn('[settings] friland_app_settings:', error.message);
+}
+
 async function loadUsers() {
+  if (authStoreUsesSupabase()) {
+    return loadUsersFromSupabase();
+  }
   const raw = await readFile(USERS_JSON, 'utf8');
   const j = JSON.parse(raw);
   if (!j.users || !Array.isArray(j.users)) return { users: [] };
@@ -121,11 +219,23 @@ async function loadUsers() {
 }
 
 async function saveUsers(data) {
+  if (authStoreUsesSupabase()) {
+    return saveUsersToSupabase(data);
+  }
+  if (process.env.VERCEL === '1') throwIfVercelReadOnlyFile();
   await mkdir(join(ROOT, 'data'), { recursive: true });
   await writeFile(USERS_JSON, JSON.stringify(data, null, 2), 'utf8');
 }
 
 async function loadSettings() {
+  if (authStoreUsesSupabase()) {
+    try {
+      return await loadSettingsFromSupabase();
+    } catch (e) {
+      console.error('loadSettings Supabase:', e.message || e);
+      return { bookkeeperEmail: '' };
+    }
+  }
   try {
     const raw = await readFile(SETTINGS_JSON, 'utf8');
     const j = JSON.parse(raw);
@@ -143,6 +253,11 @@ async function saveSettings(partial) {
   if (partial && partial.bookkeeperEmail !== undefined) {
     next.bookkeeperEmail = String(partial.bookkeeperEmail ?? '').trim();
   }
+  if (authStoreUsesSupabase()) {
+    await saveSettingsToSupabase(next);
+    return next;
+  }
+  if (process.env.VERCEL === '1') throwIfVercelReadOnlyFile();
   await mkdir(join(ROOT, 'data'), { recursive: true });
   await writeFile(SETTINGS_JSON, JSON.stringify(next, null, 2), 'utf8');
   return next;
@@ -416,6 +531,36 @@ async function sendMailToBookkeeper({ subject, text, html, attachments }) {
 }
 
 async function ensureUsersFile() {
+  if (authStoreUsesSupabase()) {
+    const sb = getSupabaseAdmin();
+    if (!sb) {
+      console.warn('[auth] Vercel: SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY mangler — brugere kan ikke gemmes.');
+      return;
+    }
+    await ensureFrilandAppSettingsSupabase();
+    const { count, error } = await sb.from('friland_users').select('*', { count: 'exact', head: true });
+    if (error) {
+      console.error('[auth] friland_users:', error.message);
+      return;
+    }
+    if (count === 0) {
+      try {
+        const raw = await readFile(USERS_JSON, 'utf8');
+        const j = JSON.parse(raw);
+        if (j.users?.length) {
+          await saveUsersToSupabase({ users: j.users });
+          console.log('[auth] Kopierede', j.users.length, 'bruger(e) fra data/users.json til Supabase');
+          return;
+        }
+      } catch (_) {}
+      const email = normalizeEmail(process.env.BOOTSTRAP_ADMIN_EMAIL || 'nikolaj@idevaerket.dk');
+      const plain = process.env.BOOTSTRAP_ADMIN_PASSWORD || 'Design86930881';
+      const passwordHash = bcrypt.hashSync(plain, 10);
+      await saveUsers({ users: [{ email, passwordHash, role: 'admin' }] });
+      console.log('[auth] Oprettet første admin i Supabase:', email);
+    }
+    return;
+  }
   try {
     await readFile(USERS_JSON);
   } catch {
@@ -770,17 +915,6 @@ async function fetchEconomic(url) {
     err.body = bodyText.slice(0, 500);
     throw err;
   }
-}
-
-let supabaseAdmin = null;
-function getSupabaseAdmin() {
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !key) return null;
-  if (!supabaseAdmin) {
-    supabaseAdmin = createClient(url, key);
-  }
-  return supabaseAdmin;
 }
 
 app.use(cors({ origin: true, credentials: true }));
