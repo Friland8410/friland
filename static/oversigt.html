@@ -38,6 +38,15 @@
     table.ov .ov-row-actions button.ov-del:hover { border-color: #c44; color: #8b1a1a; }
     .ov-resultat { margin: 1.5rem 0; padding: 1rem 1.25rem; border-radius: 8px; background: #e8f5ef; border: 1px solid var(--accent-muted); font-weight: 700; font-size: 1.05rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
     .ov-err { padding: 1rem; background: #fde8e8; color: #8b1a1a; border-radius: 8px; margin: 1rem 0; }
+    .ov-year-bar { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 1rem 1.25rem; margin-bottom: 1.25rem; padding: 0.85rem 1rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; }
+    .ov-year-bar label { display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); }
+    .ov-year-bar select { padding: 0.5rem 0.75rem; border-radius: 6px; border: 1px solid var(--border); font: inherit; min-width: 11rem; }
+    .ov-year-bar input[type="number"] { padding: 0.5rem 0.65rem; border-radius: 6px; border: 1px solid var(--border); font: inherit; width: 8rem; }
+    .ov-year-bar .ov-copy-row { flex-direction: row; align-items: center; gap: 0.5rem; font-weight: 500; }
+    .ov-year-bar .ov-copy-row input { width: auto; }
+    .ov-admin-years { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 0.75rem 1rem; padding-left: 0.5rem; border-left: 2px solid var(--border); margin-left: 0.25rem; }
+    button.ov-btn-danger { background: #f0e0e0; color: #7a2222; border: 1px solid #c9a0a0; }
+    button.ov-btn-danger:hover { background: #e8d0d0; border-color: #b08080; }
   </style>
 </head>
 <body>
@@ -67,6 +76,22 @@
     <div class="ov-wrap" id="ovWrap">
       <p class="ov-hint" id="ovHint">Henter …</p>
       <div id="ovErr" class="ov-err" style="display:none;"></div>
+      <div class="ov-year-bar" id="ovYearBar" style="display:none;">
+        <label>Regnskabsår
+          <select id="ovYearSelect" aria-label="Vælg regnskabsår"></select>
+        </label>
+        <div class="ov-admin-years" id="ovAdminYears" style="display:none;">
+          <label>Tilføj startår
+            <input type="number" id="ovNewYear" min="2000" max="2100" step="1" placeholder="fx 2023" aria-label="Startår for nyt regnskabsår" />
+          </label>
+          <label class="ov-copy-row">
+            <input type="checkbox" id="ovCopyYear" />
+            Kopiér linjer fra valgt år
+          </label>
+          <button type="button" class="ov-btn-sek" id="ovAddYear">Tilføj år</button>
+          <button type="button" class="ov-btn-danger" id="ovRemoveYear">Fjern dette år</button>
+        </div>
+      </div>
       <div class="ov-toolbar" id="ovToolbar" style="display:none;">
         <button type="button" id="ovGem">Gem ændringer</button>
         <span class="ov-status" id="ovStatus"></span>
@@ -82,9 +107,64 @@
         ? window.location.origin
         : 'http://localhost:3000';
     const cred = { credentials: 'include' };
+    const SESSION_KEY = 'frilandAuthToken';
 
+    function authHeaders() {
+      const t = sessionStorage.getItem(SESSION_KEY);
+      return t ? { Authorization: 'Bearer ' + t } : {};
+    }
+
+    let store = null;
+    let selectedYear = null;
     let data = null;
     let canEdit = false;
+    let canManageYears = false;
+
+    function regnskabsaarLabel(startYearStr) {
+      const a = Number(startYearStr);
+      if (!Number.isFinite(a)) return String(startYearStr ?? '');
+      return a + '/' + (a + 1);
+    }
+
+    function pickInitialYear(st) {
+      const q = new URLSearchParams(window.location.search).get('aar');
+      if (q && st.snapshots[q]) return q;
+      try {
+        const saved = localStorage.getItem('frilandOversigtAar');
+        if (saved && st.snapshots[saved]) return saved;
+      } catch (_) {}
+      const desc = [...st.yearOrder].sort((a, b) => Number(b) - Number(a));
+      return desc[0] || st.yearOrder[0];
+    }
+
+    function setSelectedYear(y, skipHistory) {
+      if (!store || !store.snapshots[y]) return;
+      selectedYear = y;
+      data = store.snapshots[y];
+      try {
+        localStorage.setItem('frilandOversigtAar', y);
+      } catch (_) {}
+      const sel = document.getElementById('ovYearSelect');
+      if (sel && sel.value !== y) sel.value = y;
+      if (!skipHistory) {
+        const u = new URL(window.location.href);
+        u.searchParams.set('aar', y);
+        history.replaceState(null, '', u);
+      }
+    }
+
+    function fillYearSelect() {
+      const sel = document.getElementById('ovYearSelect');
+      sel.innerHTML = '';
+      const order = [...store.yearOrder].sort((a, b) => Number(b) - Number(a));
+      for (const y of order) {
+        const o = document.createElement('option');
+        o.value = y;
+        o.textContent = regnskabsaarLabel(y);
+        sel.appendChild(o);
+      }
+      sel.value = selectedYear;
+    }
 
     function rid() {
       return 'x' + (crypto.randomUUID ? crypto.randomUUID().replace(/-/g, '').slice(0, 12) : String(Date.now()));
@@ -193,9 +273,14 @@
         return;
       }
       hint.textContent = canEdit
-        ? 'Du kan tilføje, slette og rette linjer. Husk at gemme.'
-        : 'Du ser oversigten som den er gemt. Kun administrator og bogholder kan rette.';
+        ? 'Vælg regnskabsår i menuen. Du kan tilføje, slette og rette linjer for det valgte år. Husk at gemme.'
+        : 'Vælg regnskabsår for at se ældre oversigter. Kun administrator og bogholder kan rette.';
       toolbar.style.display = canEdit ? 'flex' : 'none';
+
+      if (store && canManageYears) {
+        const rm = document.getElementById('ovRemoveYear');
+        if (rm) rm.disabled = store.yearOrder.length <= 1;
+      }
 
       const dv = derived(data);
       const pLabel = canEdit
@@ -521,16 +606,18 @@
         const res = await fetch(apiBase + '/api/oversigt', {
           ...cred,
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
+          headers: { 'Content-Type': 'application/json', ...authHeaders() },
+          body: JSON.stringify(store),
         });
         const d = await res.json().catch(() => ({}));
         if (!res.ok) throw new Error(d.error || 'Kunne ikke gemme');
-        data = d;
+        store = d;
+        setSelectedYear(selectedYear, true);
         st.textContent = 'Gemt.';
         setTimeout(() => {
           st.textContent = '';
         }, 2500);
+        fillYearSelect();
         render();
       } catch (e) {
         st.textContent = '';
@@ -565,19 +652,102 @@
       }
     });
 
+    document.getElementById('ovYearSelect').addEventListener('change', function () {
+      if (!store) return;
+      const y = this.value;
+      if (canEdit) syncFromDom();
+      setSelectedYear(y);
+      render();
+    });
+
+    document.getElementById('ovAddYear').addEventListener('click', async function () {
+      if (!canManageYears || !store) return;
+      const inp = document.getElementById('ovNewYear');
+      const y = Number(inp.value);
+      const errEl = document.getElementById('ovErr');
+      errEl.style.display = 'none';
+      if (!Number.isInteger(y) || y < 2000 || y > 2100) {
+        errEl.textContent = 'Angiv et startår mellem 2000 og 2100.';
+        errEl.style.display = 'block';
+        return;
+      }
+      const key = String(y);
+      if (store.snapshots[key]) {
+        errEl.textContent = 'Årstallet findes allerede.';
+        errEl.style.display = 'block';
+        return;
+      }
+      const body = { startYear: y };
+      if (document.getElementById('ovCopyYear').checked) body.copyFromYear = selectedYear;
+      try {
+        const res = await fetch(apiBase + '/api/oversigt/years', {
+          ...cred,
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', ...authHeaders() },
+          body: JSON.stringify(body),
+        });
+        const d = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(d.error || 'Kunne ikke tilføje år');
+        store = d;
+        setSelectedYear(key);
+        fillYearSelect();
+        inp.value = '';
+        document.getElementById('ovCopyYear').checked = false;
+        render();
+      } catch (e) {
+        errEl.textContent = e.message || String(e);
+        errEl.style.display = 'block';
+      }
+    });
+
+    document.getElementById('ovRemoveYear').addEventListener('click', async function () {
+      if (!canManageYears || !store || store.yearOrder.length <= 1) return;
+      const y = selectedYear;
+      if (!confirm('Slet oversigt for ' + regnskabsaarLabel(y) + '? Dette kan ikke fortrydes.')) return;
+      const errEl = document.getElementById('ovErr');
+      errEl.style.display = 'none';
+      try {
+        const res = await fetch(apiBase + '/api/oversigt/years/' + encodeURIComponent(y), {
+          ...cred,
+          method: 'DELETE',
+          headers: { ...authHeaders() },
+        });
+        const d = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(d.error || 'Kunne ikke fjerne år');
+        store = d;
+        const next = pickInitialYear(store);
+        setSelectedYear(next);
+        fillYearSelect();
+        render();
+      } catch (e) {
+        errEl.textContent = e.message || String(e);
+        errEl.style.display = 'block';
+      }
+    });
+
     (async function init() {
       const errEl = document.getElementById('ovErr');
       errEl.style.display = 'none';
       try {
         const [meRes, dataRes] = await Promise.all([
-          fetch(apiBase + '/api/auth/me', cred),
-          fetch(apiBase + '/api/oversigt', cred),
+          fetch(apiBase + '/api/auth/me', { ...cred, headers: authHeaders() }),
+          fetch(apiBase + '/api/oversigt', { ...cred, headers: authHeaders() }),
         ]);
         const me = await meRes.json();
         const d = await dataRes.json();
         if (!dataRes.ok) throw new Error(d.error || 'Kunne ikke hente oversigt');
         canEdit = !!me.canEditOversigt;
-        data = d;
+        canManageYears = !!me.canManageOversigtYears;
+        store = d;
+        selectedYear = pickInitialYear(store);
+        data = store.snapshots[selectedYear];
+        document.getElementById('ovYearBar').style.display = 'flex';
+        document.getElementById('ovAdminYears').style.display = canManageYears ? 'flex' : 'none';
+        fillYearSelect();
+        setSelectedYear(selectedYear, true);
+        const u = new URL(window.location.href);
+        u.searchParams.set('aar', selectedYear);
+        history.replaceState(null, '', u);
         render();
       } catch (e) {
         errEl.textContent = e.message || String(e);

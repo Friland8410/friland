@@ -359,35 +359,130 @@ function normalizeOversigtPayload(body) {
   };
 }
 
-async function loadOversigt() {
+function inferStartYearFromPeriodLabel(label) {
+  const m = String(label ?? '').match(/(\d{1,2})\.(\d{1,2})\.(\d{2}|\d{4})/);
+  if (!m) return null;
+  let y = parseInt(m[3], 10);
+  if (y < 100) y += 2000;
+  return Number.isFinite(y) ? y : null;
+}
+
+function defaultPeriodLabelForStartYear(y) {
+  const a = Number(y);
+  if (!Number.isFinite(a)) return 'Regnskabsår';
+  return `01.03.${a} til 28.02.${a + 1}`;
+}
+
+function isMultiYearOversigtStore(p) {
+  return (
+    p &&
+    typeof p === 'object' &&
+    p.snapshots &&
+    typeof p.snapshots === 'object' &&
+    !Array.isArray(p.snapshots)
+  );
+}
+
+/** @returns {{ storeVersion: number, yearOrder: string[], snapshots: Record<string, ReturnType<normalizeOversigtPayload>> }} */
+function migrateRawToOversigtStore(raw) {
+  if (isMultiYearOversigtStore(raw)) {
+    const order = Array.isArray(raw.yearOrder) ? raw.yearOrder.map(String) : [];
+    const snaps = raw.snapshots && typeof raw.snapshots === 'object' ? raw.snapshots : {};
+    const allKeys = [...new Set([...order, ...Object.keys(snaps)])];
+    if (allKeys.length === 0) {
+      const def = normalizeOversigtPayload(createDefaultOversigt());
+      const ky = String(inferStartYearFromPeriodLabel(def.periodLabel) ?? 2025);
+      return { storeVersion: 2, yearOrder: [ky], snapshots: { [ky]: def } };
+    }
+    const yearOrder = allKeys.sort((a, b) => Number(a) - Number(b));
+    const snapshots = {};
+    for (const y of yearOrder) {
+      const snap = snaps[y];
+      if (snap != null && typeof snap === 'object') {
+        snapshots[y] = normalizeOversigtPayload(snap);
+      } else {
+        const blank = normalizeOversigtPayload(createDefaultOversigt());
+        blank.periodLabel = defaultPeriodLabelForStartYear(y);
+        snapshots[y] = blank;
+      }
+    }
+    return { storeVersion: 2, yearOrder, snapshots };
+  }
+  const single = normalizeOversigtPayload(raw && typeof raw === 'object' ? raw : {});
+  let ky = inferStartYearFromPeriodLabel(single.periodLabel);
+  if (ky == null || !Number.isFinite(ky)) ky = 2025;
+  const key = String(ky);
+  return { storeVersion: 2, yearOrder: [key], snapshots: { [key]: single } };
+}
+
+async function loadOversigtRawFromDiskOrSupabase() {
   if (authStoreUsesSupabase()) {
     try {
       const p = await loadJsonDocument(DOC_OVERSIGT);
-      if (p && typeof p === 'object') return normalizeOversigtPayload(p);
+      if (p && typeof p === 'object') return p;
     } catch (e) {
       console.error('[oversigt] Supabase:', e.message || e);
     }
-    return normalizeOversigtPayload(createDefaultOversigt());
+    return null;
   }
   try {
     const raw = await readFile(OVERSIGT_JSON, 'utf8');
-    const j = JSON.parse(raw);
-    return normalizeOversigtPayload(j);
+    return JSON.parse(raw);
   } catch {
-    return normalizeOversigtPayload(createDefaultOversigt());
+    return null;
   }
 }
 
-async function saveOversigt(data) {
-  const norm = normalizeOversigtPayload(data);
+async function loadOversigt() {
+  const raw = await loadOversigtRawFromDiskOrSupabase();
+  if (raw == null) return migrateRawToOversigtStore(normalizeOversigtPayload(createDefaultOversigt()));
+  return migrateRawToOversigtStore(raw);
+}
+
+async function saveOversigtStore(store, allowYearStructureChange) {
+  const cur = await loadOversigt();
+  let next;
+  if (allowYearStructureChange) {
+    if (!isMultiYearOversigtStore(store)) {
+      const err = new Error('Ugyldigt format: forventer yearOrder og snapshots');
+      err.status = 400;
+      throw err;
+    }
+    next = migrateRawToOversigtStore(store);
+  } else {
+    next = {
+      storeVersion: 2,
+      yearOrder: [...cur.yearOrder],
+      snapshots: {},
+    };
+    for (const y of cur.yearOrder) {
+      next.snapshots[y] =
+        store?.snapshots?.[y] != null
+          ? normalizeOversigtPayload(store.snapshots[y])
+          : cur.snapshots[y];
+    }
+  }
+  if (!next.yearOrder.length) {
+    const err = new Error('Der skal være mindst ét regnskabsår i oversigten');
+    err.status = 400;
+    throw err;
+  }
+  for (const y of next.yearOrder) {
+    if (!next.snapshots[y]) {
+      next.snapshots[y] = normalizeOversigtPayload(createDefaultOversigt());
+      next.snapshots[y].periodLabel = defaultPeriodLabelForStartYear(y);
+    } else {
+      next.snapshots[y] = normalizeOversigtPayload(next.snapshots[y]);
+    }
+  }
   if (authStoreUsesSupabase()) {
-    await saveJsonDocument(DOC_OVERSIGT, norm);
-    return norm;
+    await saveJsonDocument(DOC_OVERSIGT, next);
+    return next;
   }
   if (process.env.VERCEL === '1') throwIfVercelReadOnlyFile();
   await mkdir(join(ROOT, 'data'), { recursive: true });
-  await writeFile(OVERSIGT_JSON, JSON.stringify(norm, null, 2), 'utf8');
-  return norm;
+  await writeFile(OVERSIGT_JSON, JSON.stringify(next, null, 2), 'utf8');
+  return next;
 }
 
 async function ensureOversigtFile() {
@@ -395,11 +490,11 @@ async function ensureOversigtFile() {
     if (!(await documentRowExists(DOC_OVERSIGT))) {
       try {
         const raw = await readFile(OVERSIGT_JSON, 'utf8');
-        await saveOversigt(normalizeOversigtPayload(JSON.parse(raw)));
+        await saveOversigtStore(migrateRawToOversigtStore(JSON.parse(raw)), true);
         console.log('[oversigt] Seedet fra data/oversigt.json til Supabase');
         return;
       } catch (_) {}
-      await saveOversigt(createDefaultOversigt());
+      await saveOversigtStore(migrateRawToOversigtStore(createDefaultOversigt()), true);
       console.log('[oversigt] Oprettet standardlayout i Supabase');
     }
     return;
@@ -407,7 +502,7 @@ async function ensureOversigtFile() {
   try {
     await readFile(OVERSIGT_JSON);
   } catch {
-    await saveOversigt(createDefaultOversigt());
+    await saveOversigtStore(migrateRawToOversigtStore(createDefaultOversigt()), true);
     console.log('[oversigt] Oprettet data/oversigt.json med standardlayout');
   }
 }
@@ -1091,6 +1186,7 @@ app.get('/api/auth/me', (req, res) => {
     admin: role === 'admin',
     bogholder: role === 'bogholder',
     canEditOversigt: role === 'admin' || role === 'bogholder',
+    canManageOversigtYears: role === 'admin',
   });
 });
 
@@ -1182,11 +1278,66 @@ app.get('/api/oversigt', async (req, res) => {
 
 app.put('/api/oversigt', requireAdminOrBogholder, async (req, res) => {
   try {
-    const saved = await saveOversigt(req.body);
+    const allowYears = req.frilandUser.role === 'admin';
+    const saved = await saveOversigtStore(req.body, allowYears);
     res.json(saved);
   } catch (err) {
     console.error('oversigt put:', err);
-    res.status(500).json({ error: err.message || 'Kunne ikke gemme oversigt' });
+    const status = err.status && Number.isFinite(err.status) ? err.status : 500;
+    res.status(status).json({ error: err.message || 'Kunne ikke gemme oversigt' });
+  }
+});
+
+app.post('/api/oversigt/years', requireAdmin, async (req, res) => {
+  try {
+    const startYear = Number(req.body?.startYear);
+    if (!Number.isInteger(startYear) || startYear < 2000 || startYear > 2100) {
+      return res.status(400).json({ error: 'Ugyldigt startår (heltal 2000–2100)' });
+    }
+    const key = String(startYear);
+    const store = await loadOversigt();
+    if (store.snapshots[key]) {
+      return res.status(400).json({ error: 'Dette regnskabsår findes allerede' });
+    }
+    const copyFrom = req.body?.copyFromYear;
+    let copyKey =
+      copyFrom !== undefined && copyFrom !== null && String(copyFrom).trim() !== ''
+        ? String(copyFrom).trim()
+        : null;
+    if (copyKey && !store.snapshots[copyKey]) copyKey = null;
+    let snap;
+    if (copyKey) {
+      snap = normalizeOversigtPayload(JSON.parse(JSON.stringify(store.snapshots[copyKey])));
+    } else {
+      snap = normalizeOversigtPayload(createDefaultOversigt());
+    }
+    snap.periodLabel = defaultPeriodLabelForStartYear(startYear);
+    store.snapshots[key] = snap;
+    store.yearOrder = [...store.yearOrder, key].sort((a, b) => Number(a) - Number(b));
+    await saveOversigtStore(store, true);
+    res.json(await loadOversigt());
+  } catch (err) {
+    console.error('oversigt years post:', err);
+    res.status(500).json({ error: err.message || 'Kunne ikke tilføje år' });
+  }
+});
+
+app.delete('/api/oversigt/years/:startYear', requireAdmin, async (req, res) => {
+  try {
+    const key = String(req.params.startYear ?? '').trim();
+    if (!key) return res.status(400).json({ error: 'Mangler år' });
+    const store = await loadOversigt();
+    if (!store.snapshots[key]) return res.status(404).json({ error: 'Regnskabsår findes ikke' });
+    if (store.yearOrder.length <= 1) {
+      return res.status(400).json({ error: 'Kan ikke slette det sidste regnskabsår' });
+    }
+    delete store.snapshots[key];
+    store.yearOrder = store.yearOrder.filter((y) => y !== key);
+    await saveOversigtStore(store, true);
+    res.json(await loadOversigt());
+  } catch (err) {
+    console.error('oversigt years delete:', err);
+    res.status(500).json({ error: err.message || 'Kunne ikke fjerne år' });
   }
 });
 
