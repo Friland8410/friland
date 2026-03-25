@@ -2,7 +2,7 @@
   "rewrites": [{ "source": "/(.*)", "destination": "/api" }],
   "functions": {
     "api/index.js": {
-      "includeFiles": ["static/**", "data/**", "forbrug-kategorier.json", "scripts/**"]
+      "includeFiles": "{static/**,data/**,scripts/**,forbrug-kategorier.json}"
     }
   },
   "headers": [
