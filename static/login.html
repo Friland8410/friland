@@ -52,7 +52,8 @@
       }
 
       const params = new URLSearchParams(window.location.search);
-      const next = safeNext(params.get('next'));
+      const nextRaw = params.get('next');
+      const next = nextRaw == null || nextRaw === '' ? '/index.html' : safeNext(nextRaw);
 
       document.getElementById('loginForm').addEventListener('submit', async function (ev) {
         ev.preventDefault();
@@ -67,8 +68,14 @@
             credentials: 'include',
             body: JSON.stringify({ email, password }),
           });
-          const data = await res.json().catch(() => ({}));
-          if (!res.ok) throw new Error(data.error || 'Login fejlede');
+          const text = await res.text();
+          let data = {};
+          try {
+            data = text ? JSON.parse(text) : {};
+          } catch (_) {
+            throw new Error('Uventet svar fra serveren (HTTP ' + res.status + ').');
+          }
+          if (!res.ok) throw new Error(data.error || 'Login fejlede (HTTP ' + res.status + ')');
           if (data.token) {
             try {
               sessionStorage.setItem('frilandAuthToken', data.token);

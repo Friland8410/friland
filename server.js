@@ -32,6 +32,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 /** På Vercel ligger bundtet i en undermappe; process.cwd() er projektroden med includeFiles. */
 const ROOT = process.env.VERCEL ? process.cwd() : __dirname;
 const app = express();
+app.set('trust proxy', 1);
 const PORT = process.env.PORT || 3000;
 
 const FORBRUG_DEFAULT_JSON = join(ROOT, 'forbrug-kategorier.json');
@@ -486,10 +487,43 @@ function requireAuth(req, res, next) {
   next();
 }
 
+/** Sti som browser/serverless ser den — undgår at »/api/auth/login« matcher ikke »/auth/login« på Vercel. */
+function getRequestPath(req) {
+  const u = req.originalUrl || req.url || '';
+  const pathOnly = u.split('?')[0] || '';
+  if (pathOnly.length > 1 && pathOnly.endsWith('/')) return pathOnly.slice(0, -1);
+  return pathOnly || '/';
+}
+
 function apiSkalIkkeKræveLogin(req) {
+  const full = getRequestPath(req);
   const p = req.path || '';
-  if (req.method === 'POST' && (p === '/auth/login' || p === '/auth/logout')) return true;
-  if (req.method === 'GET' && (p === '/ping' || p === '/auth/me')) return true;
+  const loginPost =
+    req.method === 'POST' &&
+    (full === '/api/auth/login' ||
+      full === '/auth/login' ||
+      p === '/api/auth/login' ||
+      p === '/auth/login');
+  const logoutPost =
+    req.method === 'POST' &&
+    (full === '/api/auth/logout' ||
+      full === '/auth/logout' ||
+      p === '/api/auth/logout' ||
+      p === '/auth/logout');
+  if (loginPost || logoutPost) return true;
+  const pingGet =
+    req.method === 'GET' &&
+    (full === '/api/ping' || p === '/api/ping' || p === '/ping');
+  const meGet =
+    req.method === 'GET' &&
+    (full === '/api/auth/me' || p === '/api/auth/me' || p === '/auth/me');
+  const settingsPublicGet =
+    req.method === 'GET' &&
+    (full === '/api/settings/public' || p === '/api/settings/public');
+  const supabasePublicGet =
+    req.method === 'GET' &&
+    (full === '/api/supabase/public-config' || p === '/api/supabase/public-config');
+  if (pingGet || meGet || settingsPublicGet || supabasePublicGet) return true;
   return false;
 }
 
