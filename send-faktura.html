@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <title>Send faktura – Friland</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -62,7 +63,7 @@
 
   <main class="content">
     <p class="bh-hint" style="max-width:40rem;">
-      Vælg <strong>én</strong> metode nedenfor, udfyld dine kontaktoplysninger og tryk <strong>Send faktura</strong>.
+      Vælg <strong>én</strong> metode nedenfor, udfyld kontaktoplysninger og <strong>kontonummer til udbetaling</strong>, og tryk <strong>Send faktura</strong>.
       Layout for punkt 3 svarer til GF-faktura-eksemplet (dato, adresse, linjer, I alt).
     </p>
     <p class="bh-eksempel"><a href="gf-faktura-eksempel.pdf" download>Download eksempel-PDF (GF faktura)</a></p>
@@ -137,6 +138,9 @@
         </label>
         <label>Din email
           <input type="email" id="kEmail" autocomplete="email" required />
+        </label>
+        <label>Kontonummer (til udbetaling)
+          <input type="text" id="kKonto" inputmode="numeric" autocomplete="off" required placeholder="Fx reg.nr og kontonr." />
         </label>
         <label>Bemærkning (valgfri)
           <textarea id="kBem" rows="2" placeholder="Fx hvilket arrangement det vedrører"></textarea>
@@ -239,9 +243,15 @@
       skjulBeskeder();
       const kontaktNavn = document.getElementById('kNavn').value.trim();
       const kontaktEmail = document.getElementById('kEmail').value.trim();
+      const kontonummer = document.getElementById('kKonto').value.trim();
       const bemærkning = document.getElementById('kBem').value.trim();
       if (!kontaktNavn || !kontaktEmail) {
         sendtFejl.textContent = 'Udfyld navn og email.';
+        sendtFejl.style.display = 'block';
+        return;
+      }
+      if (!kontonummer) {
+        sendtFejl.textContent = 'Udfyld kontonummer til udbetaling.';
         sendtFejl.style.display = 'block';
         return;
       }
@@ -250,6 +260,7 @@
       fd.append('mode', mode);
       fd.append('kontaktNavn', kontaktNavn);
       fd.append('kontaktEmail', kontaktEmail);
+      fd.append('kontonummer', kontonummer);
       if (bemærkning) fd.append('bemærkning', bemærkning);
 
       if (mode === 'foto') {

@@ -894,8 +894,23 @@ app.post('/api/bogholder-afsendelse', uploadBilag.single('fil'), async (req, res
     const mode = String(req.body.mode || '');
     const kontaktNavn = String(req.body.kontaktNavn || '').trim();
     const kontaktEmail = normalizeEmail(req.body.kontaktEmail);
+    const kontonummer = String(req.body.kontonummer || '')
+      .trim()
+      .replace(/\s+/g, ' ')
+      .slice(0, 80);
     if (!kontaktNavn || !kontaktEmail || !isValidEmail(kontaktEmail)) {
       return res.status(400).json({ error: 'Udfyld dit navn og en gyldig email.' });
+    }
+    if (!kontonummer) {
+      return res.status(400).json({ error: 'Udfyld kontonummer til udbetaling.' });
+    }
+
+    function escapeHtmlMail(s) {
+      return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
     }
 
     let subject = '';
@@ -962,6 +977,7 @@ app.post('/api/bogholder-afsendelse', uploadBilag.single('fil'), async (req, res
         '—————',
         `Ialt\t${formatBeloebDaServer(total)} kr`,
         '',
+        `Kontonummer (udbetaling): ${kontonummer}`,
         `Indsender (kontakt): ${kontaktNavn} <${kontaktEmail}>`,
       ].join('\n');
       text = `Faktura (som GF-skabelon) sendt fra Friland-web.\nVedhæftet: GF-faktura.pdf\n\n${bodyText}`;
@@ -981,6 +997,7 @@ app.post('/api/bogholder-afsendelse', uploadBilag.single('fil'), async (req, res
         total,
         kontaktNavn,
         kontaktEmail: kontaktEmail,
+        kontonummer,
         bem,
       });
       attachments.push({

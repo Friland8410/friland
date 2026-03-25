@@ -28,6 +28,7 @@ export function buildGfFakturaPdfBuffer({
   total,
   kontaktNavn,
   kontaktEmail,
+  kontonummer,
   bem,
 }) {
   const datoVis = /^\d{4}-\d{2}-\d{2}$/.test(String(datoIso)) ? formatDatoDansk(datoIso) : String(datoIso || '');
@@ -98,6 +99,10 @@ export function buildGfFakturaPdfBuffer({
     doc.font('Helvetica').fontSize(9).fillColor('#333333');
     doc.text(`Indsender: ${kontaktNavn} <${kontaktEmail}>`, left, y, { width: w });
     y += 14;
+    if (kontonummer && String(kontonummer).trim()) {
+      doc.text(`Kontonummer (udbetaling): ${String(kontonummer)}`, left, y, { width: w });
+      y += 14;
+    }
     if (bem && String(bem).trim()) {
       doc.text(`Bemærkning: ${String(bem)}`, left, y, { width: w, lineGap: 2 });
     }
