@@ -43,8 +43,61 @@ const OVERSIGT_JSON = join(ROOT, 'data', 'oversigt.json');
 const FORBRUG_INDTASTET_JSON = join(ROOT, 'data', 'forbrug-indtastet.json');
 const KONTINGENT_JSON = join(ROOT, 'data', 'kontingent.json');
 
-const authSessions = new Map();
 const SESSION_COOKIE = 'friland_sid';
+
+function getSessionSecret() {
+  const s = process.env.FRILAND_SESSION_SECRET;
+  if (s && String(s).trim().length >= 16) return String(s).trim();
+  if (process.env.VERCEL === '1' || process.env.NODE_ENV === 'production') {
+    return null;
+  }
+  return 'lokal-udvikling-friland-session-erstat-i-produktion';
+}
+
+/**
+ * Stateless token (cookie + Bearer) så login virker på serverless — hukommelses-Map deles ikke mellem Vercel-instanser.
+ */
+function signFrilandSession({ email, role, expMs }) {
+  const secret = getSessionSecret();
+  if (!secret) {
+    const err = new Error(
+      'FRILAND_SESSION_SECRET mangler eller er for kort (min. 16 tegn). Sæt den under Vercel → Settings → Environment Variables.',
+    );
+    err.status = 503;
+    throw err;
+  }
+  const payload = JSON.stringify({ email, role, exp: expMs });
+  const payloadB64 = Buffer.from(payload, 'utf8').toString('base64url');
+  const sig = crypto.createHmac('sha256', secret).update(payloadB64).digest('hex');
+  return `${payloadB64}.${sig}`;
+}
+
+function verifyFrilandSessionToken(token) {
+  const secret = getSessionSecret();
+  if (!secret || !token) return null;
+  const str = String(token);
+  const dot = str.lastIndexOf('.');
+  if (dot <= 0) return null;
+  const payloadB64 = str.slice(0, dot);
+  const sig = str.slice(dot + 1);
+  const expected = crypto.createHmac('sha256', secret).update(payloadB64).digest('hex');
+  try {
+    if (sig.length !== expected.length || !crypto.timingSafeEqual(Buffer.from(sig, 'utf8'), Buffer.from(expected, 'utf8')))
+      return null;
+  } catch {
+    return null;
+  }
+  let data;
+  try {
+    data = JSON.parse(Buffer.from(payloadB64, 'base64url').toString('utf8'));
+  } catch {
+    return null;
+  }
+  if (!data?.email || typeof data.exp !== 'number' || data.exp < Date.now()) return null;
+  const role = data.role;
+  if (role !== 'admin' && role !== 'bogholder' && role !== 'user') return null;
+  return { email: normalizeEmail(data.email), role };
+}
 
 const uploadBilag = multer({
   storage: multer.memoryStorage(),
@@ -409,13 +462,6 @@ async function ensureBootstrapAdmin() {
   if (changed) await saveUsers(data);
 }
 
-function pruneAuthSessions() {
-  const now = Date.now();
-  for (const [token, s] of authSessions) {
-    if (!s || s.exp < now) authSessions.delete(token);
-  }
-}
-
 function getSessionToken(req) {
   const c = req.cookies?.[SESSION_COOKIE];
   if (c && typeof c === 'string' && c.trim()) return c.trim();
@@ -425,13 +471,10 @@ function getSessionToken(req) {
 }
 
 function attachSessionUser(req, res, next) {
-  pruneAuthSessions();
   const t = getSessionToken(req);
   if (t) {
-    const s = authSessions.get(t);
-    if (s && s.exp > Date.now()) {
-      req.frilandUser = { email: s.email, role: s.role };
-    }
+    const u = verifyFrilandSessionToken(t);
+    if (u) req.frilandUser = { email: u.email, role: u.role };
   }
   next();
 }
@@ -758,20 +801,23 @@ app.post('/api/auth/login', async (req, res) => {
     if (!u || !(await bcrypt.compare(String(password), u.passwordHash))) {
       return res.status(401).json({ error: 'Forkert email eller kode' });
     }
-    pruneAuthSessions();
-    const token = crypto.randomBytes(32).toString('hex');
     const maxAgeMs = 48 * 60 * 60 * 1000;
-    authSessions.set(token, {
-      email: u.email,
-      role: u.role,
-      exp: Date.now() + maxAgeMs,
-    });
+    const expMs = Date.now() + maxAgeMs;
+    let token;
+    try {
+      token = signFrilandSession({ email: u.email, role: u.role, expMs });
+    } catch (e) {
+      const st = e.status || 500;
+      console.error('auth login session:', e);
+      return res.status(st).json({ error: e.message || 'Login fejlede' });
+    }
+    const cookieSecure = process.env.NODE_ENV === 'production' || process.env.VERCEL === '1';
     res.cookie(SESSION_COOKIE, token, {
       httpOnly: true,
       sameSite: 'lax',
       path: '/',
       maxAge: maxAgeMs,
-      secure: process.env.NODE_ENV === 'production',
+      secure: cookieSecure,
     });
     res.json({ ok: true, token, email: u.email, role: u.role });
   } catch (err) {
@@ -781,8 +827,6 @@ app.post('/api/auth/login', async (req, res) => {
 });
 
 app.post('/api/auth/logout', (req, res) => {
-  const t = getSessionToken(req);
-  if (t) authSessions.delete(t);
   res.clearCookie(SESSION_COOKIE, { path: '/' });
   res.json({ ok: true });
 });
